@@ -40,13 +40,13 @@ class Delivery(BaseModel, Base):
                         foreign_keys=[t_location_id],
                         back_populates="deliveries_to")
 
-
     def __init__(self, *args, **kwargs):
         """initializes Delivery"""
         super().__init__(*args, **kwargs)
 
-
-    def calc_price(self):
-        """calculate the price of the product based on the weight and type"""
-        self.price = int((self.weight / 5) * 1000)
-
+    def __setattr__(self, name, value):
+        """sets the price based on the weight of the shipment"""
+        if name == "weight":
+            price = int((self.weight / 5) * 1000)
+            super().__setattr__("price", value)
+        super().__setattr__(name, value)

@@ -11,7 +11,7 @@ class Sender(BaseModel, Base):
     __tablename__ = 'senders'
     name = Column(String(128), nullable=False)
     email = Column(String(128), nullable=False, unique=True)
-    password = Column(String(128), nullable=False)
+    password = Column(String(1024), nullable=False)
     deliveries = relationship("Delivery",
                               backref="sender",
                               cascade="all, delete, delete-orphan")
@@ -21,8 +21,8 @@ class Sender(BaseModel, Base):
         """initializes a sender"""
         super().__init__(*args, **kwargs)
 
-    def __setattr__(self, name, value):
-        """sets a password with md5 encryption"""
-        if name == "password":
-            value = md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)
+    #def __setattr__(self, name, value):
+        #"""sets a password with md5 encryption"""
+        #if name == "password":
+            #value = md5(value.encode()).hexdigest()
+        #super().__setattr__(name, value)

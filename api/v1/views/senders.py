@@ -5,6 +5,7 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
+from werkzeug.security import generate_password_hash
 
 
 @app_views.route('/senders', methods=['GET'], strict_slashes=False)
@@ -68,6 +69,7 @@ def post_sender():
         abort(400, description="Missing password")
 
     data = request.get_json()
+    data['password'] = generate_password_hash(data['password'])
     instance = Sender(**data)
     value = instance.save()
     if value == 0:

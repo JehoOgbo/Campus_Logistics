@@ -64,7 +64,7 @@ class BaseModel:
             del new_dict['_sa_instance_state']
         if save_fs is None:
             if "password" in new_dict:
-                del new_dict['passwod']
+                del new_dict['password']
         return new_dict
 
     def delete(self):
