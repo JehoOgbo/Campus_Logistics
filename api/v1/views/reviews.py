@@ -7,11 +7,13 @@ from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
+from flask_jwt_extended import jwt_required
 
 
 @app_views.route('/deliverys/<delivery_id>/reviews', methods=['GET'],
                  strict_slashes=False)
 @swag_from('documentation/reviews/get_reviews.yml', methods=['GET'])
+@jwt_required()
 def get_reviews(delivery_id):
     """
     Retrieves the list of all Review objects of a Delivery
@@ -28,6 +30,7 @@ def get_reviews(delivery_id):
 
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/reviews/get_review.yml', methods=['GET'])
+@jwt_required()
 def get_review(review_id):
     """
     Retrieves a Review object
@@ -42,6 +45,7 @@ def get_review(review_id):
 @app_views.route('/reviews/<review_id>', methods=['DELETE'],
                  strict_slashes=False)
 @swag_from('documentation/reviews/delete_reviews.yml', methods=['DELETE'])
+@jwt_required()
 def delete_review(review_id):
     """
     Deletes a Review Object
@@ -61,6 +65,7 @@ def delete_review(review_id):
 @app_views.route('/deliverys/<delivery_id>/reviews', methods=['POST'],
                  strict_slashes=False)
 @swag_from('documentation/reviews/post_reviews.yml', methods=['POST'])
+@jwt_required()
 def post_review(delivery_id):
     """
     Creates a Review
@@ -95,6 +100,7 @@ def post_review(delivery_id):
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 @swag_from('documentation/reviews/put_reviews.yml', methods=['PUT'])
+@jwt_required()
 def put_review(review_id):
     """
     Updates a Review
