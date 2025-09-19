@@ -8,6 +8,7 @@ from sqlalchemy import Column, String, ForeignKey, Float, Enum
 
 class Rating_values(enum.Enum):
     """Declare an enum class for the item type"""
+    P_FIVE = 0.5
     ONE = 1.0
     ONE_P_FIVE = 1.5
     TWO = 2.0
@@ -24,7 +25,7 @@ class Review(BaseModel, Base):
     __tablename__ = 'reviews'
     delivery_id = Column(String(60), ForeignKey('deliveries.id'), nullable=False)
     sender_id = Column(String(60), ForeignKey('senders.id'), nullable=False)
-    rating = Column(Enum(Rating_values), nullable=True)
+    rating = Column(Enum(Rating_values), nullable=False)
     description = Column(String(1024), nullable=True)
 
     def __init__(self, *args, **kwargs):
