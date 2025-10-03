@@ -1,17 +1,21 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,js,jsx,ts,tsx}", // React, Vue, or other JS/TS projects
-    "./*.html", // A simple HTML file in the root
-    "./pages/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        primary: "#e07900", // Our main orange color
-        secondary: "#092238", // Our dark blue color
+        primary: "#e07900",
+        secondary: "#092238",
+      },
+      animation: {
+        glow: "glow 1.5s infinite",
+      },
+      keyframes: {
+        glow: {
+          "0%, 100%": { boxShadow: "0 0 10px #ff00ff" },
+          "50%": { boxShadow: "0 0 20px #ff00ff" },
+        },
       },
     },
+    plugins: [],
   },
-  plugins: [],
 };

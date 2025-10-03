@@ -1,6 +1,11 @@
+import { useInView } from "react-intersection-observer";
 import { FaBoxOpen, FaTruck, FaMapMarkedAlt, FaSmile } from "react-icons/fa";
 
 export default function Features() {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: "-10px 0px",
+  });
   const features = [
     {
       icon: <FaBoxOpen className="text-4xl text-[#e07900] mb-4" />,
@@ -29,10 +34,15 @@ export default function Features() {
   ];
 
   return (
-    <section className="bg-gray-100 py-16 md:py-24 ">
-      <div className="container mx-auto px-4 animate-in fade-in duration-1000">
+    <section
+      ref={ref}
+      className={`bg-gray-100 transition-opacity ease-in duration-900 py-16 md:py-24 ${
+        inView ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      <div className="container mx-auto px-4 ">
         {/* Section Heading */}
-        <div className="text-center mb-12">
+        <div className={`  text-center mb-12 `}>
           <h2 className="text-4xl md:text-5xl font-bold text-[#092238] mb-4">
             How It Works
           </h2>
@@ -43,7 +53,13 @@ export default function Features() {
         </div>
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 ${
+            inView
+              ? "transform transition-transform duration-3000 delay-1000 ease-out -translate-x-0  opacity-100"
+              : "transform translate-x-full opacity-0"
+          }`}
+        >
           {features.map((feature, index) => (
             <div
               key={index}

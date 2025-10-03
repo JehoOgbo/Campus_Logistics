@@ -31,7 +31,7 @@ export default function Header() {
             Sign Up
           </NavLink>
           <NavLink
-            className="  text-amber-50  border-s-gray-200 border-solid px-2 py-1 rounded-lg border-2"
+            className="  text-amber-50  border-s-gray-200  px-2 pt-1.5 rounded-xl border-2"
             to="/login"
           >
             Log In

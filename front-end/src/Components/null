@@ -1,0 +1,39 @@
+{/* <div className="py-10 ">
+            <form className="flex flex-row flex-wrap font-semibold text-gray-100 ">
+              <input
+                type="text"
+                placeholder="First Name"
+                className="w-auto px-0 py-3 bg-transparent border-b border-gray-300 rounded-none 
+             focus:outline-none focus:border-primary focus:ring-0
+             transition duration-300"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="mx-2 w-auto px-0 py-3 bg-transparent border-b border-gray-300 rounded-none 
+             focus:outline-none focus:border-primary focus:ring-0
+             transition duration-300"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-auto px-0 py-3 bg-transparent border-b border-gray-300 rounded-none 
+             focus:outline-none focus:border-primary focus:ring-0
+             transition duration-300"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-auto px-0 my-4 py-3 bg-transparent border-b border-gray-300 rounded-none 
+             focus:outline-none focus:border-primary focus:ring-0
+             transition duration-300"
+              />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="w-full my-4 px-0 py-3 bg-transparent border-b border-gray-300 rounded-none 
+             focus:outline-none focus:border-primary focus:ring-0
+             transition duration-300"
+              />
+            </form>
+          </div> */}
