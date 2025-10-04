@@ -26,7 +26,7 @@ class DBStorage:
 
     def __init__(self):
         HBNB_MYSQL_USER = 'campus_dev' #getenv('HBNB_MYSQL_USER')
-        HBNB_MYSQL_PWD = 'campus_dev_pwd' #getenv('HBNB_MYSQL_PWD')
+        HBNB_MYSQL_PWD = 'Campus_dev_pwd1*' #getenv('HBNB_MYSQL_PWD')
         HBNB_MYSQL_HOST = 'localhost' #getenv('HBNB_MYSQL_HOST')
         HBNB_MYSQL_DB = 'campus_dev_db' #getenv('HBNB_MYSQL_DB')
         #HBNB_ENV = getenv('HBNB_ENV')

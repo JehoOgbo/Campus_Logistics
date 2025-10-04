@@ -1,20 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import RegisterForm from "../Components/RegisterForm";
 
 export default function Register() {
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [message, setMessage] = useState();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [message, setMessage] = useState("");
   const [token, setToken] = useState();
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const API_BASE_URL = "http://localhost:5000/api/senders";
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const API_BASE_URL = "http://localhost:5050/api/v1/senders";
+
+  const handleChange = (e) => {
+    setLastName(e.target.value);
+    setName(`${firstName} ${lastName}`);
+  };
+  useEffect(() => {
+  // This code only runs AFTER 'lastName' or 'firstName' has been updated
+  // and the component has re-rendered.
+  const newName = `${firstName} ${lastName}`;
+    setName(newName);
+}, [firstName, lastName]);
 
   const handleAuth = async (e) => {
     e.preventDefault();
-    setName(`${firstName.toLowerCase()} ${lastName.toLowerCase()}`);
 
     try {
       const response = await axios.post(API_BASE_URL, {
@@ -25,7 +35,7 @@ export default function Register() {
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
     }
-  };
+  }
 
   return (
     <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] min-h-screen py-7">
@@ -79,11 +89,16 @@ export default function Register() {
                       id="lastname"
                       type="text"
                       name="lastname"
-                      required
                       value={lastName}
                       onChange={(e) => {
                         setLastName(e.target.value);
                       }}
+                      required
+                      //onChange={handleChange} //(e) => {
+			//const xyz = e.target.value;
+                        //setLastName(xyz);
+			//setName(`${firstName} ${lastName}`);
+                      //}}
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                   </div>
@@ -111,7 +126,7 @@ export default function Register() {
                 <div>
                   <div className="flex items-center justify-between">
                     <label
-                      for="password"
+                      htmlFor="password"
                       className="block text-sm/6 font-medium text-gray-100"
                     >
                       Password

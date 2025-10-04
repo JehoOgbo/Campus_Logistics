@@ -4,7 +4,6 @@ from models.state import State
 from models.city import City
 from models.location import Location
 from models.sender import Sender
-from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
