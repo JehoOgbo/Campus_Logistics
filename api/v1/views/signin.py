@@ -51,4 +51,6 @@ def user_dashboard():
     Returns a personalized welcome message for the user
     """
     current_user_id = get_jwt_identity()
-    return jsonify(message=f"Welcome, {current_user_id}! You have successfully accessed a protected resource."), 200
+     return jsonify({
+        "name": current_user_id
+    }), 200
