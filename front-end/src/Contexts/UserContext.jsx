@@ -20,6 +20,11 @@ import { Navigate } from "react-router-dom"
         const authCheck=async()=>{
             try{
           const token=  localStorage.getItem("token")
+          if (!token) {
+  setUser(null);
+  setIsLoading(false);
+  return;
+}
             const response = await axios.get(API_BASE_URL,{headers:{Authorization: `Bearer ${token}`}})
             setUser(response.data.name)
         }catch(err){
@@ -32,7 +37,7 @@ import { Navigate } from "react-router-dom"
     },[])
 
     if (isLoading) return <p>Loading...</p>;
-  if (!user) return <Navigate to="/login" />;
+ 
   
     return(
         <UserContext.Provider value={{user, current}}>
