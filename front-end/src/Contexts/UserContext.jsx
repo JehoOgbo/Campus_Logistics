@@ -3,6 +3,7 @@ import axios from "axios"
 import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet, useLocation } from "react-router-dom"
 import { Navigate } from "react-router-dom"
+import Loader from "../Components/Loader"
 
  export const UserContext = createContext()
  export function UserProvider({children}){
@@ -36,7 +37,7 @@ import { Navigate } from "react-router-dom"
        authCheck() 
     },[])
 
-    if (isLoading) return <p>Loading...</p>;
+    if (isLoading) return <Loader/>;
  
   
     return(

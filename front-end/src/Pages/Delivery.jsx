@@ -41,6 +41,20 @@ export default function Delivery() {
     setPrice(0)
     window.scrollTo({top:0, behaviour:'smooth'})
   }
+  const handleForm = async(e)=>{
+     e.preventDefault();
+
+    try {
+      const response = await axios.post(API_BASE_URL, {
+        weight,
+        email,
+        password,
+      });
+      if (response) navigate('/login')
+    } catch (error) {
+      if (error.response) setMessage(error.response.data.message);
+    }
+  }
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
     
@@ -54,7 +68,7 @@ export default function Delivery() {
       {formOpen&&      
       (<div className="px-6  rounded border-gray-800 text-xl w-150 font-bold animate-fade-in-up duration-100">
 <h2 className="text-gray-500 py-2">Delivery Details</h2>
-        <form className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700">
+        <form onSubmit={handleForm}  className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700">
           {/* Product Name */}
           <div className="flex flex-row pt-3">
   <label className="w-65">Delivery name: </label>
@@ -125,7 +139,7 @@ export default function Delivery() {
 {/* CTA */}
 <div className="flex justify-between">
 <button type="button" className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" onClick={handleFormOpen}>Cancel</button>
-<button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">Proceed</button>
+<button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl" >Proceed</button>
 </div>
         </form>
       </div>) }

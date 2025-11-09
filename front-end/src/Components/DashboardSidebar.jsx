@@ -16,6 +16,7 @@ export default function DashboardSidebar(){
         </div>
         <div className="px-6 font-light pt-2 text-xl">
             <p>Welcome, {user}</p>
+            <span className="text-sm font-semibold" >Sign Out</span>
         </div>
         
 <div>
