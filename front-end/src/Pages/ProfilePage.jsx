@@ -42,6 +42,6 @@ export  function UserDashboard(){
         <Outlet /> {/* This renders nested routes like /dashboard/delivery */}
       </main>
      
-    </div> <Footer />
+    </div> 
     </>
 }

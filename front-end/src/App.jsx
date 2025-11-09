@@ -9,20 +9,28 @@ import Payments from "./Pages/Payments"
 import Settings from "./Pages/Settings"
 import History from "./Pages/History";
 import { UserProvider } from "./Contexts/UserContext";
+import AuthRoute from "./Components/AuthRoute";
 export default function App() {
   return (
     <BrowserRouter>
+    <UserProvider>
       <Routes>
-        <Route index element={<Homepage />} />
+        <Route element={<AuthRoute type="public"/>}>
+           <Route index element={<Homepage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<UserProvider><UserDashboard/></UserProvider>} >
+        </Route>
+     <Route element={<AuthRoute type="protected"/>}>
+       <Route path="/dashboard" element={<UserDashboard/>} >
         <Route path="delivery" element={<Delivery/>}/>
         <Route path="payments" element={<Payments/>}/>
         <Route path="settings" element={<Settings/>}/>
         <Route path="history" element={<History/>}/>
         </Route>
+     </Route>
+      
       </Routes>
+      </UserProvider>
     </BrowserRouter>
   );
 }

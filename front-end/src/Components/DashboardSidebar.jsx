@@ -32,7 +32,12 @@ export default function DashboardSidebar(){
         </NavLink>)}
        
     </ul>
-</div>
+      
+</div><div className="mt-auto text-center border-t border-gray-500 pt-8 ">
+          <p className="text-sm text-gray-200">
+            © {new Date().getFullYear()} A&U. All rights reserved.
+          </p>
+        </div>
     </nav>
     </>
 }
