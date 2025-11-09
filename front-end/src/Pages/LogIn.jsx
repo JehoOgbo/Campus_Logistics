@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login(){
     const navigate = useNavigate()
  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const API_BASE_URL = "http://localhost:5050/api/v1/signin";
+  const API_BASE_URL = "http://localhost:5050/api/v1/login";
 const [message, setMessage] = useState("");
 
       const handleAuth = async (e) => {
@@ -16,9 +17,9 @@ const [message, setMessage] = useState("");
         password,
       });
       localStorage.setItem("token", response.data.access_token); // save token
-      navigate('/dashboard')
+      navigate('/dashboard/delivery')
     } catch (err) {
-      setMessage(error.response.data.message);
+      setMessage(err.message);
     }
   };
     return (
@@ -93,14 +94,16 @@ const [message, setMessage] = useState("");
 
               <p className="mt-5 text-center text-sm/6 text-gray-400">
                 Don't have an account?
-                <NavLink to='/register'
+                
+               {message && <p>{message}</p>}
+              </p>
+              <NavLink to='/register'
                   
                   className="font-semibold text-primary hover:text-indigo-300"
                 >
                   Sign Up
                 </NavLink>
-                {message && <p>{message}</p>}
-              </p>
+                 
             </div>
           </div>
         </div>

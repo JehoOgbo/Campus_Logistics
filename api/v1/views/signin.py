@@ -51,6 +51,6 @@ def user_dashboard():
     Returns a personalized welcome message for the user
     """
     current_user_id = get_jwt_identity()
-     return jsonify({
+    return jsonify({
         "name": current_user_id
     }), 200

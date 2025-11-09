@@ -1,15 +1,23 @@
 import { NavLink, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import  { LocationContext } from "../Pages/ProfilePage";
+
+import { UserContext } from "../Contexts/UserContext";
 export default function DashboardSidebar(){
-  const side = ['dashboard','delivery','history','payments', 'settings']
-   const {current}= useContext(LocationContext)
+  const side = ['delivery','history','payments', 'settings']
+  
+   const {user,current} = useContext(UserContext)
+  
+   useEffect(()=>{})
     return<>
     
     <nav className="sticky top-0 flex flex-col w-60 bg-gradient-to-b from-[#1e3c72] to-[#2a5298] text-gray-200   shadow-xl/70 h-screen">
         <div className="rounded-full bg-primary font-semibold  w-30 h-30 flex items-center justify-center self-center mt-2 border-r-4 shadow-xl/30">
-            <h1 className="p-2 text-5xl ">A</h1>
+            <h1 className="p-2 text-5xl ">{ user.split(" ").map(word=>word[0]).join(".").toUpperCase()}</h1>
         </div>
+        <div className="px-6 font-light pt-2 text-xl">
+            <p>Welcome, {user}</p>
+        </div>
+        
 <div>
     <ul className="flex flex-col p-3">
        {

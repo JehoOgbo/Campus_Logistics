@@ -8,6 +8,7 @@ import Delivery from "./Pages/Delivery"
 import Payments from "./Pages/Payments"
 import Settings from "./Pages/Settings"
 import History from "./Pages/History";
+import { UserProvider } from "./Contexts/UserContext";
 export default function App() {
   return (
     <BrowserRouter>
@@ -15,7 +16,7 @@ export default function App() {
         <Route index element={<Homepage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<UserDashboard/>} >
+        <Route path="/dashboard" element={<UserProvider><UserDashboard/></UserProvider>} >
         <Route path="delivery" element={<Delivery/>}/>
         <Route path="payments" element={<Payments/>}/>
         <Route path="settings" element={<Settings/>}/>
