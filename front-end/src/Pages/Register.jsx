@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import {useNavigate} from "react-router-dom"
 import axios from "axios";
 import RegisterForm from "../Components/RegisterForm";
 
 export default function Register() {
+  const navigate =useNavigate()
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState("");
@@ -12,10 +14,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const API_BASE_URL = "http://localhost:5050/api/v1/senders";
 
-  const handleChange = (e) => {
-    setLastName(e.target.value);
-    setName(`${firstName} ${lastName}`);
-  };
+  
   useEffect(() => {
   // This code only runs AFTER 'lastName' or 'firstName' has been updated
   // and the component has re-rendered.
@@ -32,6 +31,7 @@ export default function Register() {
         email,
         password,
       });
+      if (response) navigate('/login')
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
     }
@@ -158,7 +158,7 @@ export default function Register() {
                   href="#"
                   className="font-semibold text-primary hover:text-indigo-300"
                 >
-                  Sign Up
+                  Sign In
                 </a>
                 {message && <p>{message}</p>}
               </p>
