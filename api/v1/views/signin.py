@@ -37,10 +37,34 @@ def login_user():
 
     if not user or not check_password_hash(user.password, password):
         return jsonify({"message": "Invalid email or password"}), 401
+    if (user.user_type != 'regular'):
+        return jsonify({"message": "Invalid email or password"}), 401
 
     # Create the access token for the logged-in user
-    access_token = create_access_token(identity=user.name)
+    access_token = create_access_token(identity=user)
     return jsonify(access_token=access_token), 200
+
+@app_views.route('/admin/login', methods=["POST"], strict_slashes=False)
+def login_admin():
+    """
+    Log in an existing admin and return a JWT access token.
+    Expects JSON data with 'email' and 'password'.
+    """
+    data = request.get_json()
+    email = data.get("email", None)
+    password = data.get("password", None)
+
+    user = senders_search(email)
+
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({"message": "Invalid email or password"}), 401
+    if (user.user_type != 'admin'):
+        return jsonify({"message": "Invalid email or password"}), 401
+
+    # Create the access token for the logged-in user
+    access_token = create_access_token(identity=user)
+    return jsonify(access_token=access_token), 200
+
 
 
 @app_views.route("/dashboard", methods=["GET"])
