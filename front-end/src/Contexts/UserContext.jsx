@@ -12,6 +12,7 @@ import Loader from "../Components/Loader"
       const API_BASE_URL = "http://localhost:5050/api/v1/dashboard";
    const location = useLocation()
     const [current, setCurrent]=useState(false)
+    const [token ,setToken] =useState(()=>  localStorage.getItem("token") || null)
 
    useEffect(()=>{
     setCurrent(location.pathname)
@@ -20,7 +21,7 @@ import Loader from "../Components/Loader"
     useEffect(()=>{
         const authCheck=async()=>{
             try{
-          const token=  localStorage.getItem("token")
+          
           if (!token) {
   setUser(null);
   setIsLoading(false);
@@ -35,13 +36,13 @@ import Loader from "../Components/Loader"
         }
     }
        authCheck() 
-    },[])
+    },[token])
 
     if (isLoading) return <Loader/>;
  
   
     return(
-        <UserContext.Provider value={{user, current}}>
+        <UserContext.Provider value={{user, current,setToken}}>
             {children}
         </UserContext.Provider>
     )
