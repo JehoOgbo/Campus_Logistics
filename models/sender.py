@@ -1,9 +1,16 @@
 #!/usr/bin/python3
 """holds class sender"""
 import models
+import enum
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
+
+
+class UserType(enum.Enum):
+    """Declare an enum class for the item type"""
+    REGULAR = 'regular'
+    ADMIN = 'admin'
 
 
 class Sender(BaseModel, Base):
@@ -12,6 +19,11 @@ class Sender(BaseModel, Base):
     name = Column(String(128), nullable=False)
     email = Column(String(128), nullable=False, unique=True)
     password = Column(String(1024), nullable=False)
+    user_type = Column(Enum(UserType), default=UserType.REGULAR,
+                       nullable=False)
+    phone_number = Column(String(128), nullable=True)
+    image_path = Column(String(1024), nullable=True)
+    # store a path to the image in image_path
     deliveries = relationship("Delivery",
                               backref="sender",
                               cascade="all, delete, delete-orphan")
