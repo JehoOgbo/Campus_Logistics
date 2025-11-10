@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../Contexts/UserContext";
 
 export default function Login(){
     const navigate = useNavigate()
@@ -8,8 +9,8 @@ export default function Login(){
   const [password, setPassword] = useState("");
   const API_BASE_URL = "http://localhost:5050/api/v1/login";
 const [message, setMessage] = useState("");
-
-      const handleAuth = async (e) => {
+const {setToken} = useContext(UserContext)
+       async function handleAuth (e)  {
     e.preventDefault();
     try {
       const response = await axios.post(API_BASE_URL, {
@@ -17,6 +18,7 @@ const [message, setMessage] = useState("");
         password,
       });
       localStorage.setItem("token", response.data.access_token); // save token
+      setToken(response.data.access_token)
       navigate('/dashboard/delivery')
     } catch (err) {
       setMessage(err.message);
