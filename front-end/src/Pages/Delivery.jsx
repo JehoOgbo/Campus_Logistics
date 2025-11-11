@@ -1,15 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DashboardSidebar from "../Components/DashboardSidebar";
 import Footer from "../Components/Footer"
+import axios from "axios";
+import { UserContext } from "../Contexts/UserContext";
 
 export default function Delivery() {
-  
+  const {token} = useContext(UserContext)
+  const [locals,setLocals] = useState()
   const[selected, setSelected] = useState()
   const [formOpen,setFormOpen] = useState(false)
   const[feature,setFeature]=useState('')
   const[weight,setWeight]=useState('')
   const [price,setPrice]=useState(0)
-    
+    useEffect(()=>{async function handleLocation(){
+      try{
+        const response = await axios.get("http://localhost:5050/api/v1/states",{headers:{Authorization:`Bearer ${token}`}})
+        setLocals(response.data)
+        console.log(response.data)
+      }catch(err){
+        console.error("Failed to fetch states:", err)
+      }
+    } handleLocation()},[])
   useEffect(()=>{
     let wPrice
     if(weight === 1 && weight != 0) {

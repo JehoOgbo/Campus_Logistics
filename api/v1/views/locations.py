@@ -120,3 +120,14 @@ def put_location(location_id):
             setattr(location, key, value)
     storage.save()
     return make_response(jsonify(location.to_dict()), 200)
+
+    # Urom AI gave me this code snippet and as usual it doesn"t work, please could you fix it 
+@app_views.route('/locations', methods=['GET'], strict_slashes=False)
+@swag_from('documentation/location/get_all_locations.yml', methods=['GET'])
+@jwt_required()
+def get_all_locations():
+    """
+    Retrieves all Location objects
+    """
+    locations = [location.to_dict() for location in storage.all(Location).values()]
+    return jsonify(locations)
