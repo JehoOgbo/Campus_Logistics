@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """holds class sender"""
 import models
-import enum
+from models.enum import UserType
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
@@ -9,11 +9,6 @@ import os
 from uuid import uuid4
 from sqlalchemy_serializer import SerializerMixin
 
-
-class UserType(enum.Enum):
-    """Declare an enum class for the item type"""
-    REGULAR = 'regular'
-    ADMIN = 'admin'
 
 
 class CustomSerializerMixin(SerializerMixin):

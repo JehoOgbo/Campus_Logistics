@@ -42,7 +42,6 @@ def login_user():
 
     # Create the access token for the logged-in user
     iden = user.to_dict()
-    iden['user_type'] = 'user'
     access_token = create_access_token(identity=iden)
     return jsonify(access_token=access_token), 200
 
@@ -64,7 +63,7 @@ def login_admin():
         return jsonify({"message": "Invalid email or password"}), 401
 
     # Create the access token for the logged-in user
-    iden = user.to_dict() | user.to_dictionary()
+    iden = user.to_dict()
     access_token = create_access_token(identity=iden)
     return jsonify(access_token=access_token), 200
 

@@ -1,17 +1,10 @@
 #!/usr/bin/python3
 """holds class delivery"""
-import enum
+from models.enum import ItemType
 import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Enum, Boolean, Float
 from sqlalchemy.orm import relationship
-
-
-class ItemType(enum.Enum):
-    """Declare an enum class for the item type"""
-    FRAGILE = 'fragile'
-    ROBUST = 'robust'
-    PERISHABLE = 'perishable'
 
 
 class Delivery(BaseModel, Base):

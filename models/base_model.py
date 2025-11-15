@@ -7,6 +7,7 @@ from datetime import datetime
 import models
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from models.enum import UserType, ItemType
 import uuid
 
 time = "%Y-%m-%dT%H:%M:%s.%f"
@@ -66,7 +67,17 @@ class BaseModel:
             if "password" in new_dict:
                 del new_dict['password']
         if "user_type" in new_dict:
-            del new_dict['user_type']
+            if new_dict["user_type"] == UserType.REGULAR:
+                new_dict["user_type"] = "regular"
+            else:
+                new_dict["user_type"] = "admin"
+        if "item_type" in new_dict:
+            if new_dict['item_type'] == ItemType.ROBUST:
+                new_dict['item_type'] = "robust"
+            elif new_dict['item_type'] == ItemType.FRAGILE:
+                new_dict['item_type'] = "fragile"
+            else:
+                new_dict['item_type'] = "perishable"
         return new_dict
 
     def delete(self):
