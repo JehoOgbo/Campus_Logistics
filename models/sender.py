@@ -7,19 +7,10 @@ from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 import os
 from uuid import uuid4
-from sqlalchemy_serializer import SerializerMixin
 
 
 
-class CustomSerializerMixin(SerializerMixin):
-    def to_dictionary(self, **kwargs):
-        """ A wrapper for the to_dict method with a custom
-            name. Prevents clashes with my to_dict method
-        """
-        return self.to_dict(**kwargs)
-
-
-class Sender(BaseModel, Base, CustomSerializerMixin):
+class Sender(BaseModel, Base):
     """Representation of the Sender"""
     __tablename__ = 'senders'
     name = Column(String(128), nullable=False)
