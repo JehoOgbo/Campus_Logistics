@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify
 from models import storage
 from flask_jwt_extended import jwt_required
+from models.sender import UserType
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
@@ -15,6 +16,9 @@ def status():
 @jwt_required()
 def number_objects():
     """ Retrieves the number of each objects by type """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     classes = ["State", "Location", "Delivery", "Review", "City", "Sender"]
     objects = ["states", "locations", "deliveries", "reviews", "cities", "senders"]
 

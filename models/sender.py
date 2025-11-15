@@ -5,6 +5,9 @@ import enum
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
+import os
+from uuid import uuid4
+from sqlalchemy_serializer import SerializerMixin
 
 
 class UserType(enum.Enum):
@@ -13,7 +16,15 @@ class UserType(enum.Enum):
     ADMIN = 'admin'
 
 
-class Sender(BaseModel, Base):
+class CustomSerializerMixin(SerializerMixin):
+    def to_dictionary(self, **kwargs):
+        """ A wrapper for the to_dict method with a custom
+            name. Prevents clashes with my to_dict method
+        """
+        return self.to_dict(**kwargs)
+
+
+class Sender(BaseModel, Base, CustomSerializerMixin):
     """Representation of the Sender"""
     __tablename__ = 'senders'
     name = Column(String(128), nullable=False)
@@ -22,8 +33,9 @@ class Sender(BaseModel, Base):
     user_type = Column(Enum(UserType), default=UserType.REGULAR,
                        nullable=False)
     phone_number = Column(String(128), nullable=True)
-    image_path = Column(String(1024), nullable=True)
+    image_path = Column(String(255), nullable=True)
     # store a path to the image in image_path
+    saved_filename = Column(String(255), unique=True, nullable=True)
     deliveries = relationship("Delivery",
                               backref="sender",
                               cascade="all, delete, delete-orphan")
@@ -33,8 +45,16 @@ class Sender(BaseModel, Base):
         """initializes a sender"""
         super().__init__(*args, **kwargs)
 
-    #def __setattr__(self, name, value):
-        #"""sets a password with md5 encryption"""
+    def __setattr__(self, name, value):
+        """set the unique saved file name"""
+        if name == 'image_path':
+            new_val = value.copy()
+            file_ext = os.path.splitext(new_val)[1]
+            unique_filename = f"{uuid4()}{file_ext}"
+            save_path = os.path.join('uploads/images', unique_filename)
+            shutil.copy(value, save_path)
+            super.__setattr__('saved_filename', save_path)
+        super().__setattr__(name, value)
         #if name == "password":
             #value = md5(value.encode()).hexdigest()
         #super().__setattr__(name, value)

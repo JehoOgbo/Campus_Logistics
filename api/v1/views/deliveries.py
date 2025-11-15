@@ -3,13 +3,13 @@
 from models.state import State
 from models.city import City
 from models.location import Location
-from models.sender import Sender
+from models.sender import Sender, UserType
 from models.amenity import Amenity
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 @app_views.route('/locations/<location_id>/deliveries/to', methods=['GET'],
@@ -20,6 +20,9 @@ def get_deliveries_to(location_id):
     """
     Retrieves the list of all deliveries to a location
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 
     if not location:
@@ -38,6 +41,9 @@ def get_deliveries_from(location_id):
     """
     Retrieves the list of all deliveries to a location
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 
     if not location:

@@ -23,7 +23,7 @@ class Delivery(BaseModel, Base):
     weight = Column(Float, nullable=False)
     declared_items = Column(String(1024), nullable=True)
     item_type = Column(Enum(ItemType), default=ItemType.ROBUST,
-                       nullable = False)
+                       nullable=False)
     price = Column(Float, nullable=False)
     receiver_name = Column(String(128), nullable=False)
     receiver_email = Column(String(128), nullable=False)

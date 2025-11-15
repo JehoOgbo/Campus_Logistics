@@ -14,6 +14,7 @@ from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import IntegrityError
+from os import makedirs
 
 classes = {"State": State, "City": City, "Location": Location,
            "Delivery": Delivery, "Sender": Sender, "Review": Review}
@@ -35,6 +36,8 @@ class DBStorage:
                                              HBNB_MYSQL_PWD,
                                              HBNB_MYSQL_HOST,
                                              HBNB_MYSQL_DB))
+        UPLOAD_FOLDER = 'uploads/images'
+        makedirs(UPLOAD_FOLDER, exist_ok=True)
         #if HBNB_ENV == 'test':
             #Base.metadata.drop_all(self.__engine)
 

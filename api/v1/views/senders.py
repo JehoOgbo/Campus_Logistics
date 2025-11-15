@@ -20,7 +20,7 @@ def get_senders():
     all_senders = storage.all(Sender).values()
     list_senders = []
     for senders in all_senders:
-        list_senders.append(senders.to_dict())
+        list_senders.append(senders.to_dict() | senders.to_dictionary())
     return jsonify(list_senders)
 
 
@@ -33,7 +33,7 @@ def get_sender(sender_id):
     if not sender:
         abort(404)
 
-    return jsonify(sender.to_dict())
+    return jsonify(sender.to_dict() | sender.to_dictionary())
 
 
 @app_views.route('/senders/<sender_id>', methods=['DELETE'],
@@ -77,7 +77,7 @@ def post_sender():
     instance = Sender(**data)
     value = instance.save()
     if value == 0:
-        return make_response(jsonify(instance.to_dict()), 201)
+        return make_response(jsonify(instance.to_dict() | instance.to_dictionary()), 201)
     else:
         abort(409)
 
@@ -107,6 +107,6 @@ def put_sender(sender_id):
             setattr(sender, key, value)
     value = storage.save()
     if value == 0:
-        return make_response(jsonify(sender.to_dict()), 200)
+        return make_response(jsonify(sender.to_dict() | sender.to_dictionary), 200)
     else:
         abort(409)

@@ -43,6 +43,9 @@ def delete_state(state_id):
     Deletes a State Object
     """
 
+    current_user = get_jwt_identity()
+    if current_user.user_type != "admin":
+        return jsonify({"message": "Access denied"}), 403
     state = storage.get(State, state_id)
 
     if not state:
@@ -61,6 +64,9 @@ def post_state():
     """
     Creates a State
     """
+    current_user = get_jwt_identity()
+    if current_user.user_type != "admin":
+        return jsonify({"message": "Access denied"}), 403
     if not request.get_json():
         abort(400, description="Not a JSON")
 
@@ -83,6 +89,9 @@ def put_state(state_id):
     """
     Updates a State
     """
+    current_user = get_jwt_identity()
+    if current_user.user_type != "admin":
+        return jsonify({"message": "Access denied"}), 403
     state = storage.get(State, state_id)
 
     if not state:

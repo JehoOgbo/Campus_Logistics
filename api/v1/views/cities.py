@@ -2,11 +2,12 @@
 """ objects that handles all default RestFul API actions for cities """
 from models.city import City
 from models.state import State
+from models.sender import UserType
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
@@ -48,6 +49,9 @@ def delete_city(city_id):
     """
     Deletes a city based on id provided
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
 
     if not city:
@@ -66,6 +70,9 @@ def post_city(state_id):
     """
     Creates a City
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     state = storage.get(State, state_id)
     if not state:
         abort(404)
@@ -88,6 +95,9 @@ def put_city(city_id):
     """
     Updates a City
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
     if not city:
         abort(404)

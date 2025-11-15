@@ -3,12 +3,12 @@
 from models.state import State
 from models.city import City
 from models.location import Location
-from models.sender import Sender
+from models.sender import Sender, UserType
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 @app_views.route('/cities/<city_id>/locations', methods=['GET'],
@@ -52,6 +52,9 @@ def delete_location(location_id):
     Deletes a Location Object
     """
 
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != UserType.ADMIN:
+        return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 
     if not location:
@@ -71,6 +74,9 @@ def post_location(city_id):
     """
     Creates a Location
     """
+    current_user = get_jwt_identity()
+    if current_user.user_type != "admin":
+        return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
 
     if not city:
@@ -104,6 +110,9 @@ def put_location(location_id):
     """
     Updates a Location
     """
+    current_user = get_jwt_identity()
+    if current_user.user_type != "admin":
+        return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 
     if not location:
