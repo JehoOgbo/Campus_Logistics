@@ -42,7 +42,7 @@ import Loader from "../Components/Loader"
  
   
     return(
-        <UserContext.Provider value={{user, current,setToken}}>
+        <UserContext.Provider value={{user, current,setToken, token}}>
             {children}
         </UserContext.Provider>
     )
