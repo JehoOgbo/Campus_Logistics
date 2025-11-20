@@ -1,26 +1,25 @@
 import { useState, useEffect } from "react";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import RegisterForm from "../Components/RegisterForm";
 
 export default function Register() {
-  const navigate =useNavigate()
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState("");
-  const [token, setToken] = useState();
+  // const [token, setToken] = useState();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const API_BASE_URL = "http://localhost:5050/api/v1/senders";
 
-  
   useEffect(() => {
-  // This code only runs AFTER 'lastName' or 'firstName' has been updated
-  // and the component has re-rendered.
-  const newName = `${firstName} ${lastName}`;
+    // This code only runs AFTER 'lastName' or 'firstName' has been updated
+    // and the component has re-rendered.
+    const newName = `${firstName} ${lastName}`;
     setName(newName);
-}, [firstName, lastName]);
+  }, [firstName, lastName]);
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -31,11 +30,11 @@ export default function Register() {
         email,
         password,
       });
-      if (response) navigate('/login')
+      if (response) navigate("/login");
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
     }
-  }
+  };
 
   return (
     <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] min-h-screen py-7">
@@ -95,9 +94,9 @@ export default function Register() {
                       }}
                       required
                       //onChange={handleChange} //(e) => {
-			//const xyz = e.target.value;
-                        //setLastName(xyz);
-			//setName(`${firstName} ${lastName}`);
+                      //const xyz = e.target.value;
+                      //setLastName(xyz);
+                      //setName(`${firstName} ${lastName}`);
                       //}}
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />

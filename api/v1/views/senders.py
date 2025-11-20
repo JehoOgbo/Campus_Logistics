@@ -77,7 +77,7 @@ def post_sender():
     instance = Sender(**data)
     value = instance.save()
     if value == 0:
-        return make_response(jsonify(instance.to_dict() | instance.to_dictionary()), 201)
+        return make_response(jsonify(instance.to_dict()), 201)
     else:
         abort(409)
 
@@ -107,6 +107,6 @@ def put_sender(sender_id):
             setattr(sender, key, value)
     value = storage.save()
     if value == 0:
-        return make_response(jsonify(sender.to_dict() | sender.to_dictionary), 200)
+        return make_response(jsonify(sender.to_dict()), 200)
     else:
         abort(409)

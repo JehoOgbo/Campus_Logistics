@@ -6,6 +6,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 import os
+import shutil
 from uuid import uuid4
 
 
@@ -34,13 +35,13 @@ class Sender(BaseModel, Base):
     def __setattr__(self, name, value):
         """set the unique saved file name"""
         if name == 'image_path':
-            new_val = value.copy()
+            new_val = value[:]
             file_ext = os.path.splitext(new_val)[1]
             unique_filename = f"{uuid4()}{file_ext}"
             save_path = os.path.join('uploads/images', unique_filename)
             shutil.copy(value, save_path)
             super.__setattr__('saved_filename', save_path)
         super().__setattr__(name, value)
-        #if name == "password":
-            #value = md5(value.encode()).hexdigest()
-        #super().__setattr__(name, value)
+        if name == "password":
+            value = md5(value.encode()).hexdigest()
+        super().__setattr__(name, value)
