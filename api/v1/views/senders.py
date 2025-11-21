@@ -121,7 +121,7 @@ def upload_image(sender_id):
     if not sender:
         abort(404)
 
-    if 'file' not in request.files:
+    if 'image' not in request.files:
         abort(400, description="Not a File")
 
     file = request.files['image']

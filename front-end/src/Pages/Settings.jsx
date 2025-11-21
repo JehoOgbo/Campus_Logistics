@@ -8,6 +8,7 @@ export default function Settings() {
   const [pass, setPass] = useState(false);
   const [phone, setPhone] = useState("");
   const [file, setFile] = useState(null);
+  const [userName, setUserName] = useState(user.name);
   const [password, setPassword] = useState();
   const [newEmail, setNewEmail] = useState(user.email);
   const [newPwd, setNewPwd] = useState();
@@ -40,30 +41,55 @@ export default function Settings() {
     e.preventDefault();
     if (newPwd != password) setMessage('The passwords don"t match');
 
-    if (oldPwd != user.password) {
-      console.log(oldPwd);
-      console.log(message);
-      setMessage("Old Password is incorrect");
-    }
+    // if (oldPwd != user.password) {
+    //   console.log(oldPwd);
+
+    //   setMessage("Old Password is incorrect");
+    // }
     const formData = new FormData();
-    formData.append("name", user.name);
-    formData.append("email", user.email);
-    formData.append("phone_number", phone);
-    formData.append("password", password);
-    if (file) formData.append("image_path", file);
+    if (file) formData.append("image", file);
     try {
+      if (file) {
+        const imageResponse = await axios.put(
+          `http://localhost:5050/api/v1/senders/upload/${user.id}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (!imageResponse) {
+          setMessage("Image upload failed");
+          return;
+        }
+      }
       const response = await axios.put(
         API_BASE_URL,
-        formData,
+        {
+          name: userName,
+          email: newEmail,
+          password,
+          phone_number: phone,
+        },
 
         {
           headers: { Authorization: `Bearer ${token}` },
-          "Content-Type": "multipart/form-data",
         }
       );
       if (response) navigate("/dashboard/settings");
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Something went wrong");
+      }
     }
   };
 
@@ -78,7 +104,13 @@ export default function Settings() {
           {/* Profile Picture */}
           <div
             className={` rounded-full ml-10  font-semibold  w-45 h-45 flex items-center bg-cover justify-center  mt-2 border-r-4 shadow-xl/30 bg-primary  `}
-            style={file ? { backgroundImage: `url(${preview})` } : {}}
+            style={
+              file
+                ? { backgroundImage: `url(${preview})` } // preview
+                : user.image_path
+                ? { backgroundImage: `url(${user.image_path})` } // existing image
+                : {}
+            }
           >
             <h1 className="p-2 text-5xl ">
               {!file &&
@@ -108,6 +140,8 @@ export default function Settings() {
               name="User Name"
               placeholder={user.name}
               className="ml-1 px-2  border-0.5 rounded-md bg-gray-300 w-40  text-sm font-medium focus:outline-none"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
           </div>
           {/* Your Phone Number */}
@@ -121,6 +155,7 @@ export default function Settings() {
               className="ml-1 px-2 border-0.5 rounded-md font-medium text-sm bg-gray-300 w-40 focus:outline-none"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              placeholder={user.phone_number}
             />
           </div>
           {/* Email */}
@@ -216,7 +251,9 @@ export default function Settings() {
             </button>
           </div>
         </form>
-        <p className="text-xl font-semibold text-gray-700">{message}</p>
+        {message && (
+          <p className="text-xl font-semibold text-gray-700">{message}</p>
+        )}
       </div>
     </div>
   );
