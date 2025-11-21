@@ -10,12 +10,25 @@ from flasgger.utils import swag_from
 from flask_jwt_extended import JWTManager
 from uuid import uuid4
 from datetime import timedelta
+import os
+from flask import request, redirect, url_for
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# -- UPLOAD Configuration --
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+def allowed_file(filename: str) -> bool:
+    """ Checks if the file has an allowed extension
+    """
+    return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # -- JWT Configuration --
 # You should generate a complex, random key for production

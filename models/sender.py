@@ -32,16 +32,16 @@ class Sender(BaseModel, Base):
         """initializes a sender"""
         super().__init__(*args, **kwargs)
 
-    def __setattr__(self, name, value):
-        """set the unique saved file name"""
-        if name == 'image_path':
-            new_val = value[:]
-            file_ext = os.path.splitext(new_val)[1]
-            unique_filename = f"{uuid4()}{file_ext}"
-            save_path = os.path.join('uploads/images', unique_filename)
-            shutil.copy(value, save_path)
-            super.__setattr__('saved_filename', save_path)
-        super().__setattr__(name, value)
-        if name == "password":
-            value = md5(value.encode()).hexdigest()
-        super().__setattr__(name, value)
+    #def __setattr__(self, name, value):
+        #"""set the unique saved file name"""
+        #if name == 'image_path':
+            #new_val = value[:]
+            #file_ext = os.path.splitext(new_val)[1]
+            #unique_filename = f"{uuid4()}{file_ext}"
+            #save_path = os.path.join('uploads/images', unique_filename)
+            #shutil.copy(value, save_path)
+            #super.__setattr__('saved_filename', save_path)
+        #super().__setattr__(name, value)
+        #if name == "password":
+            #value = md5(value.encode()).hexdigest()
+        #super().__setattr__(name, value)
