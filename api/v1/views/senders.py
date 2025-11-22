@@ -20,6 +20,9 @@ def get_senders():
     Retrieves the list of all sender objects
     or a specific sender
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != 'admin':
+        return jsonify({"message": "Access denied"}), 403
     all_senders = storage.all(Sender).values()
     list_senders = []
     for senders in all_senders:
