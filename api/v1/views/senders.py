@@ -101,6 +101,8 @@ def put_sender(sender_id):
 
     data = request.get_json()
     for key, value in data.items():
+        if value == '':
+            continue
         if key not in ignore:
             if key == 'password':
                 key = generate_password_hash(key)
@@ -111,33 +113,44 @@ def put_sender(sender_id):
     else:
         abort(409)
 
-@app_views.route('/senders/upload/<sender_id>', methods=['PUT'], strict_slashes=False)
-def upload_image(sender_id):
-    """
-    Adds image to a sender
-    """
-    sender = storage.get(Sender, sender_id)
+#def upload_image(sender_id):
+#    """
+#    Adds image to a sender
+#    """
+#    sender = storage.get(Sender, sender_id)
+#
+#    if not sender:
+#        abort(404)
+#
+#    if 'image' not in request.files:
+#        abort(400, description="Not a File")
+#
+#    file = request.files['image']
+#
+#    #if file.name == '':
+#        #abort(400, description="No file found")
+#
+#    if file and allowed_file(file.filename):
+#        filename = secure_filename(file.filename)
+#
+#        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#        file.save(file_path)
 
-    if not sender:
-        abort(404)
+#        setattr(sender, "image_path", file_path)
+#        setattr(sender, "saved_filename", filename)
+#
+#        return make_response(jsonify(sender.to_dict()), 200)
+#
+#    abort(400, description="Invalid file type")
 
-    if 'image' not in request.files:
-        abort(400, description="Not a File")
 
-    file = request.files['image']
+@app_views.route('/senders/upload/<sender_id>/<filename>', methods=['PUT'], strict_slashes=False)
+def upload(sender_id, filename):
+    secure_name = secure_filename(filename)
+    full_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_name)
 
-    if file.filename == '':
-        abort(400, description="No file found")
+    try:
+        with open(full_filepath, 'wb') as f:
+            f.write(request.get_data())
 
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-
-        setattr(sender, "image_path", file_path)
-        setattr(sender, "saved_filename", filename)
-
-        return make_response(jsonify(sender.to_dict()), 200)
-
-    abort(400, description="Invalid file type")
+        return make_response(jsonify("success")), 200)
