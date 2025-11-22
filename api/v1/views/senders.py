@@ -7,6 +7,8 @@ from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required
+from werkzeug.utils import secure_filename
+import os
 
 
 @app_views.route('/senders', methods=['GET'], strict_slashes=False)
@@ -97,7 +99,7 @@ def put_sender(sender_id):
     if not request.get_json():
         abort(400, description="Not a JSON")
 
-    ignore = ['id', 'email', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at', 'image_path']
 
     data = request.get_json()
     for key, value in data.items():
@@ -145,14 +147,24 @@ def put_sender(sender_id):
 
 
 @app_views.route('/senders/upload/<sender_id>/<filename>', methods=['PUT'], strict_slashes=False)
+@jwt_required()
 def upload(sender_id, filename):
+    """ uploads an image """
+    sender = storage.get(Sender, sender_id)
+
+    if not sender:
+        abort(404)
+
     secure_name = secure_filename(filename)
-    full_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_name)
+    full_filepath = os.path.join('uploads', secure_name)
 
     try:
         with open(full_filepath, 'wb') as f:
             f.write(request.get_data())
+        setattr(sender, "image_path", full_filepath)
+        value = storage.save()
+        if value == 0:
+            return make_response(jsonify(sender.to_dict()), 200)
 
-        return make_response(jsonify("success"), 200)
     except Exception as e:
         abort(400)

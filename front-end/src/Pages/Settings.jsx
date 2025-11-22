@@ -23,7 +23,7 @@ export default function Settings() {
     setPass(!pass);
   }
   function handleChange(e) {
-    const uploadedImage = e.target.files;
+    const uploadedImage = e.target.files[0];
     console.log(uploadedImage);
     if (uploadedImage) {
       setPreview(URL.createObjectURL(e.target.files[0]));
@@ -51,7 +51,7 @@ export default function Settings() {
     try {
       if (file) {
         const imageResponse = await axios.put(
-          `http://localhost:5050/api/v1/senders/upload/${user.id}/cropped-download.jpg`,
+          `http://localhost:5050/api/v1/senders/upload/${user.id}/${file.name}`,
           formData,
           {
             headers: {
