@@ -153,4 +153,6 @@ def upload(sender_id, filename):
         with open(full_filepath, 'wb') as f:
             f.write(request.get_data())
 
-        return make_response(jsonify("success")), 200)
+        return make_response(jsonify("success"), 200)
+    except Exception as e:
+        abort(400)
