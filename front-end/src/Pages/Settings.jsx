@@ -51,7 +51,7 @@ export default function Settings() {
     try {
       if (file) {
         const imageResponse = await axios.put(
-          `http://localhost:5050/api/v1/senders/upload/${user.id}`,
+          `http://localhost:5050/api/v1/senders/upload/${user.id}/cropped-download.jpg`,
           formData,
           {
             headers: {
@@ -96,7 +96,6 @@ export default function Settings() {
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col w-150">
       <div className="px-6">
-        {" "}
         <form
           className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700 "
           onSubmit={handleAuthUpdate}
