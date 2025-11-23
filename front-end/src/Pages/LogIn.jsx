@@ -2,29 +2,46 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../Contexts/UserContext";
+import validator from "validator";
 
-export default function Login(){
-    const navigate = useNavigate()
- const [email, setEmail] = useState("");
+export default function Login() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState("");
   const API_BASE_URL = "http://localhost:5050/api/v1/login";
-const [message, setMessage] = useState("");
-const {setToken} = useContext(UserContext)
-       async function handleAuth (e)  {
+  const [message, setMessage] = useState("");
+  const [mErr, setMErr] = useState(""); //mErr stands for mailError
+  const { setToken } = useContext(UserContext);
+  async function handleAuth(e) {
     e.preventDefault();
+    if (!validator.isEmail(email)) {
+      setMErr("Oops, that doesn’t look like an email.");
+      return;
+    }
+    setMErr("");
     try {
       const response = await axios.post(API_BASE_URL, {
         email,
         password,
       });
       localStorage.setItem("token", response.data.access_token); // save token
-      setToken(response.data.access_token)
-      navigate('/dashboard/delivery')
+      setToken(response.data.access_token);
+      navigate("/dashboard/delivery");
     } catch (err) {
-      setMessage(err.message);
+      const error = err.response?.status;
+      switch (error) {
+        case 401:
+          setMessage("Invalid Email or password");
+          break;
+        case 500:
+          setMessage("Oops, that’s on us. Please try again later");
+          break;
+        default:
+          setMessage("My bad, Something went wrong, try again");
+      }
     }
-  };
-    return (
+  }
+  return (
     <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] min-h-screen py-7">
       <div className="flex flex-row rounded-2xl items-center mx-auto container justify-between bg-secondary w-200 shadow-xl/30 ">
         <div className="bg-[url(/pic5.jpg)] bg-cover bg-center items-end w-full h-155  rounded-2xl"></div>
@@ -43,8 +60,7 @@ const {setToken} = useContext(UserContext)
 
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
               <form onSubmit={handleAuth} className="space-y-4">
-                
-                
+                {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
@@ -54,17 +70,27 @@ const {setToken} = useContext(UserContext)
                   </label>
                   <div className="mt-1">
                     <input
-                      id="email"
-                      type="email"
+                      type="text"
                       name="email"
+                      value={email}
                       required
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="email"
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                        mErr
+                          ? "focus:outline-red-500 outline-red-500"
+                          : "focus:outline-primary outline-white/10"
+                      }`}
                     />
+                    <span
+                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
+ "
+                    >
+                      {mErr}
+                    </span>
                   </div>
                 </div>
-
+                {/* Password */}
                 <div>
                   <div className="flex items-center justify-between">
                     <label
@@ -94,18 +120,18 @@ const {setToken} = useContext(UserContext)
                 </div>
               </form>
 
-              <p className="mt-5 text-center text-sm/6 text-gray-400">
+              <div className="mt-5 text-center text-sm/6 text-gray-400">
+                {message && (
+                  <p className="pb-2 text-sm text-red-500">{message}</p>
+                )}
                 Don't have an account?
-                
-               {message && <p>{message}</p>}
-              </p>
-              <NavLink to='/register'
-                  
+                <NavLink
+                  to="/register"
                   className="font-semibold text-primary hover:text-indigo-300"
                 >
                   Sign Up
                 </NavLink>
-                 
+              </div>
             </div>
           </div>
         </div>
@@ -113,4 +139,3 @@ const {setToken} = useContext(UserContext)
     </div>
   );
 }
-

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function Settings() {
-  const { user, token } = useContext(UserContext);
+  const { user, token, setUser } = useContext(UserContext);
   const [pass, setPass] = useState(false);
   const [phone, setPhone] = useState("");
   const [file, setFile] = useState(null);
@@ -23,7 +23,7 @@ export default function Settings() {
     setPass(!pass);
   }
   function handleChange(e) {
-    const uploadedImage = e.target.files;
+    const uploadedImage = e.target.files[0];
     console.log(uploadedImage);
     if (uploadedImage) {
       setPreview(URL.createObjectURL(e.target.files[0]));
@@ -51,7 +51,7 @@ export default function Settings() {
     try {
       if (file) {
         const imageResponse = await axios.put(
-          `http://localhost:5050/api/v1/senders/upload/${user.id}/cropped-download.jpg`,
+          `http://localhost:5050/api/v1/senders/upload/${user.id}/${file.name}`,
           formData,
           {
             headers: {
@@ -78,7 +78,11 @@ export default function Settings() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (response) navigate("/dashboard/settings");
+      if (response) {
+        localStorage.setItem("token", token);
+        setUser(response.data.all);
+        navigate("/dashboard/settings");
+      }
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
       if (
@@ -251,7 +255,9 @@ export default function Settings() {
           </div>
         </form>
         {message && (
-          <p className="text-xl font-semibold text-gray-700">{message}</p>
+          <p className="text-md pl-20 pt-2 font-semibold text-red-700">
+            {message}
+          </p>
         )}
       </div>
     </div>

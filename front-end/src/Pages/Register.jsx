@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-import RegisterForm from "../Components/RegisterForm";
+import validator from "validator";
 
 export default function Register() {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState("");
-  //
+  const [mErr, setMErr] = useState(""); //mErr stands for mailError
+  const [pErr, setPErr] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,25 @@ export default function Register() {
 
   const handleAuth = async (e) => {
     e.preventDefault();
+    if (!validator.isEmail(email)) {
+      setMErr("Oops, that doesn’t look like an email.");
+    }
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      console.log("weak");
+      setPErr(
+        "Your password should be strong: minimum 8 characters, with uppercase, numbers, and special characters."
+      );
+      return;
+    }
+    setMErr("");
 
     try {
       const response = await axios.post(API_BASE_URL, {
@@ -31,17 +51,27 @@ export default function Register() {
         password,
       });
       if (response) navigate("/login");
-    } catch (error) {
-      if (error.response) setMessage(error.response.data.message);
+    } catch (err) {
+      const error = err.response?.status;
+      switch (error) {
+        case 409:
+          setMessage("Email already exits");
+          break;
+        case 500:
+          setMessage("Oops, that’s on us. Please try again later");
+          break;
+        default:
+          setMessage("My bad, Something went wrong, try again");
+      }
     }
   };
 
   return (
-    <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] min-h-screen py-7">
-      <div className="flex flex-row rounded-2xl items-center mx-auto container justify-between bg-secondary w-200 shadow-xl/30 ">
-        <div className="bg-[url(/pic1.jpg)] bg-cover bg-left items-end w-full h-155  rounded-2xl"></div>
-        <div className=" w-full min-h-full pl-2 flex flex-col">
-          <div className="flex min-h-full flex-col justify-center px-6 py-10 lg:px-8">
+    <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] md:min-h-screen md:py-7 h-screen pt-10  ">
+      <div className="flex flex-row rounded-2xl items-center mx-auto md:container justify-between bg-secondary md:w-200  shadow-xl/30 w-100 ">
+        <div className="bg-[url(/pic1.jpg)] bg-cover md:bg-left bg-center items-end  md:w-full md:h-155 h-168  rounded-2xl"></div>
+        <div className=" w-full md:min-h-full md:pl-2 flex flex-col">
+          <div className="flex min-h-full flex-col justify-center px-6 py-10 ">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <img
                 className="h-15 w-auto  mx-auto"
@@ -52,7 +82,7 @@ export default function Register() {
                 Create an Account
               </h2>
             </div>
-
+            {/* Name */}
             <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
               <form onSubmit={handleAuth} className="space-y-4">
                 <div>
@@ -71,6 +101,7 @@ export default function Register() {
                       onChange={(e) => {
                         setFirstName(e.target.value);
                       }}
+                      placeholder="Ahmed"
                       required
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
@@ -92,16 +123,13 @@ export default function Register() {
                       onChange={(e) => {
                         setLastName(e.target.value);
                       }}
+                      placeholder="Sani"
                       required
-                      //onChange={handleChange} //(e) => {
-                      //const xyz = e.target.value;
-                      //setLastName(xyz);
-                      //setName(`${firstName} ${lastName}`);
-                      //}}
                       className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                   </div>
                 </div>
+                {/* Email */}
                 <div>
                   <label
                     htmlFor="email"
@@ -111,17 +139,27 @@ export default function Register() {
                   </label>
                   <div className="mt-1">
                     <input
-                      id="email"
-                      type="email"
+                      value={email}
+                      type="text"
                       name="email"
                       required
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="email"
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                        mErr
+                          ? "focus:outline-red-500 outline-red-500"
+                          : "focus:outline-primary outline-white/10"
+                      }`}
                     />
+                    <span
+                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
+ "
+                    >
+                      {mErr}
+                    </span>
                   </div>
                 </div>
-
+                {/* Password */}
                 <div>
                   <div className="flex items-center justify-between">
                     <label
@@ -136,11 +174,22 @@ export default function Register() {
                       id="password"
                       type="password"
                       name="password"
+                      value={password}
                       required
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                        mErr
+                          ? "focus:outline-red-500 outline-red-500"
+                          : "focus:outline-primary outline-white/10"
+                      }`}
                     />
+                    <span
+                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
+ "
+                    >
+                      {pErr}
+                    </span>
                   </div>
                 </div>
 
@@ -151,16 +200,18 @@ export default function Register() {
                 </div>
               </form>
 
-              <p className="mt-5 text-center text-sm/6 text-gray-400">
+              <div className="mt-5 text-center text-sm/6 text-gray-400">
+                {message && (
+                  <p className="pb-2 text-sm text-red-500">{message}</p>
+                )}
                 Already have an account?
-                <a
-                  href="#"
+                <NavLink
+                  to="/login"
                   className="font-semibold text-primary hover:text-indigo-300"
                 >
                   Sign In
-                </a>
-                {message && <p>{message}</p>}
-              </p>
+                </NavLink>
+              </div>
             </div>
           </div>
         </div>
