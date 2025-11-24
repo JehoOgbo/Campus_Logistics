@@ -131,7 +131,8 @@ def upload_image(sender_id):
     """
     Adds image to a sender
     """
-    UPLOAD_FOLDER = 'uploads/images'
+    UPLOAD_FOLDER = 'front-end/public/uploads/images'
+    NEW_UPLOAD_FOLDER = '/uploads/images/'
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
     sender = storage.get(Sender, sender_id)
@@ -156,6 +157,7 @@ def upload_image(sender_id):
         file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
         file.save(file_path)
 
+        file_path = NEW_UPLOAD_FOLDER + unique_filename
         setattr(sender, "image_path", file_path)
         setattr(sender, "saved_filename", filename)
 

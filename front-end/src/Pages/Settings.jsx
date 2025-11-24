@@ -41,17 +41,12 @@ export default function Settings() {
     e.preventDefault();
     if (newPwd != password) setMessage('The passwords don"t match');
 
-    // if (oldPwd != user.password) {
-    //   console.log(oldPwd);
-
-    //   setMessage("Old Password is incorrect");
-    // }
     const formData = new FormData();
     if (file) formData.append("image", file);
     try {
       if (file) {
         const imageResponse = await axios.post(
-          `http://localhost:5050/api/v1/senders/upload/${user.id}/cropped-download.jpg`,
+          `http://localhost:5050/api/v1/senders/upload/${user.id}`,
           formData,
           {
             headers: {
@@ -117,6 +112,7 @@ export default function Settings() {
           >
             <h1 className="p-2 text-5xl ">
               {!file &&
+                !user.image_path &&
                 user.name
                   .split(" ")
                   .map((word) => word[0])
@@ -169,6 +165,7 @@ export default function Settings() {
             <input
               type="email"
               name="email"
+              disabled
               placeholder={user.email}
               className="ml-1 px-2   border-0.5 rounded-md bg-gray-300 w-40  text-sm font-medium focus:outline-none"
               value={newEmail}
