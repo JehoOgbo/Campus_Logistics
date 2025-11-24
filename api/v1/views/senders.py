@@ -7,6 +7,9 @@ from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_required
+from werkzeug.utils import secure_filename
+import os
+from uuid import uuid4
 
 
 @app_views.route('/senders', methods=['GET'], strict_slashes=False)
@@ -17,6 +20,9 @@ def get_senders():
     Retrieves the list of all sender objects
     or a specific sender
     """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != 'admin':
+        return jsonify({"message": "Access denied"}), 403
     all_senders = storage.all(Sender).values()
     list_senders = []
     for senders in all_senders:
@@ -97,7 +103,7 @@ def put_sender(sender_id):
     if not request.get_json():
         abort(400, description="Not a JSON")
 
-    ignore = ['id', 'email', 'created_at', 'updated_at']
+    ignore = ['id', 'email', 'created_at', 'updated_at', 'image_path']
 
     data = request.get_json()
     for key, value in data.items():
@@ -113,46 +119,48 @@ def put_sender(sender_id):
     else:
         abort(409)
 
-#def upload_image(sender_id):
-#    """
-#    Adds image to a sender
-#    """
-#    sender = storage.get(Sender, sender_id)
-#
-#    if not sender:
-#        abort(404)
-#
-#    if 'image' not in request.files:
-#        abort(400, description="Not a File")
-#
-#    file = request.files['image']
-#
-#    #if file.name == '':
-#        #abort(400, description="No file found")
-#
-#    if file and allowed_file(file.filename):
-#        filename = secure_filename(file.filename)
-#
-#        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#        file.save(file_path)
+def allowed_file(filename: str) -> bool:
+    """ Checks if the file has an allowed extension
+    """
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#        setattr(sender, "image_path", file_path)
-#        setattr(sender, "saved_filename", filename)
-#
-#        return make_response(jsonify(sender.to_dict()), 200)
-#
-#    abort(400, description="Invalid file type")
+@app_views.route('/senders/upload/<sender_id>', methods=['POST'], strict_slashes=False)
+def upload_image(sender_id):
+    """
+    Adds image to a sender
+    """
+    UPLOAD_FOLDER = 'uploads/images'
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+    sender = storage.get(Sender, sender_id)
 
-@app_views.route('/senders/upload/<sender_id>/<filename>', methods=['PUT'], strict_slashes=False)
-def upload(sender_id, filename):
-    secure_name = secure_filename(filename)
-    full_filepath = os.path.join(app.config['UPLOAD_FOLDER'], secure_name)
+    if not sender:
+        abort(404)
 
-    try:
-        with open(full_filepath, 'wb') as f:
-            f.write(request.get_data())
+    if 'image' not in request.files:
+        abort(400, description="Not a File")
 
-        return make_response(jsonify("success"), 200)
-    except Exception as e:
-        abort(400)
+    file = request.files['image']
+
+    if file.name == '':
+        abort(400, description="No file found")
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+
+        file_ext = os.path.splitext(filename)[1]
+        unique_filename = f"{uuid4()}{file_ext}"
+ 
+        file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+        file.save(file_path)
+
+        setattr(sender, "image_path", file_path)
+        setattr(sender, "saved_filename", filename)
+
+        value = storage.save()
+        if value == 0:
+            return make_response(jsonify(sender.to_dict()), 200)
+
+    abort(400, description="Invalid file type")

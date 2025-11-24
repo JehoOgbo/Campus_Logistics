@@ -21,7 +21,7 @@ def get_deliveries_to(location_id):
     Retrieves the list of all deliveries to a location
     """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user['user_type'] != 'admin':
         return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 
@@ -42,7 +42,7 @@ def get_deliveries_from(location_id):
     Retrieves the list of all deliveries to a location
     """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user['user_type'] != 'admin':
         return jsonify({"message": "Access denied"}), 403
     location = storage.get(Location, location_id)
 

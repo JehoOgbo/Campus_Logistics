@@ -50,8 +50,8 @@ export default function Settings() {
     if (file) formData.append("image", file);
     try {
       if (file) {
-        const imageResponse = await axios.put(
-          `http://localhost:5050/api/v1/senders/upload/${user.id}/${file.name}`,
+        const imageResponse = await axios.post(
+          `http://localhost:5050/api/v1/senders/upload/${user.id}/cropped-download.jpg`,
           formData,
           {
             headers: {
