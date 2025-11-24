@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import validator from "validator";
+import {
+  EnvelopeIcon,
+  LockClosedIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -67,9 +72,9 @@ export default function Register() {
   };
 
   return (
-    <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] md:min-h-screen md:py-7 h-screen pt-10  ">
-      <div className="flex flex-row rounded-2xl items-center mx-auto md:container justify-between bg-secondary md:w-200  shadow-xl/30 w-100 ">
-        <div className="bg-[url(/pic1.jpg)] bg-cover md:bg-left bg-center items-end  md:w-full md:h-155 h-168  rounded-2xl"></div>
+    <div className="bg-gradient-to-r from-[#1e3c72] to-[#2a5298] md:min-h-screen sm:min-h-screen md:py-7 h-screen flex justify-center items-center  ">
+      <div className="flex flex-row rounded-2xl items-center  mx-auto md:container justify-between bg-secondary md:w-200 sm:180 md:h-155 shadow-xl/30 w-100 ">
+        <div className="bg-[url(/pic1.jpg)] bg-cover md:bg-left bg-center items-end  md:w-full md:h-full h-168  rounded-2xl"></div>
         <div className=" w-full md:min-h-full md:pl-2 flex flex-col">
           <div className="flex min-h-full flex-col justify-center px-6 py-10 ">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -88,11 +93,12 @@ export default function Register() {
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm/6 font-medium text-gray-100"
+                    className="block text-sm/6 tracking-wider  font-medium md:text-gray-100 text-slate-300"
                   >
                     First Name
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <UserIcon className="h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       id="firstname"
                       type="text"
@@ -103,18 +109,19 @@ export default function Register() {
                       }}
                       placeholder="Ahmed"
                       required
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      className="block w-full pl-10 rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                   </div>
                 </div>
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm/6 font-medium text-gray-100"
+                    className="block text-sm/6 tracking-wider font-medium md:text-gray-100 text-slate-300"
                   >
                     Last Name
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <UserIcon className="h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       id="lastname"
                       type="text"
@@ -125,7 +132,7 @@ export default function Register() {
                       }}
                       placeholder="Sani"
                       required
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      className="block w-full pl-10 rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                   </div>
                 </div>
@@ -133,64 +140,68 @@ export default function Register() {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm/6 font-medium text-gray-100"
+                    className="block text-sm/6 tracking-wider font-medium md:text-gray-100 text-slate-300"
                   >
                     Email address
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <EnvelopeIcon className="absolute h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       value={email}
                       type="text"
                       name="email"
                       required
+                      placeholder="youremail@email.com"
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="email"
-                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                      className={`block pl-10 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
                         mErr
                           ? "focus:outline-red-500 outline-red-500"
                           : "focus:outline-primary outline-white/10"
                       }`}
                     />
-                    <span
-                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
+                  </div>{" "}
+                  <span
+                    className="text-red-400  left-2 text-xs transition ease-in-out duration-300
  "
-                    >
-                      {mErr}
-                    </span>
-                  </div>
+                  >
+                    {mErr}
+                  </span>
                 </div>
                 {/* Password */}
                 <div>
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor="password"
-                      className="block text-sm/6 font-medium text-gray-100"
+                      className="block text-sm/6 tracking-wider font-medium md:text-gray-100 text-slate-300"
                     >
                       Password
                     </label>
                   </div>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <LockClosedIcon className=" h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       id="password"
                       type="password"
                       name="password"
                       value={password}
+                      placeholder="••••••••"
                       required
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
-                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                      className={`block pl-10 w-full placeholder-slate-600 rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
                         mErr
                           ? "focus:outline-red-500 outline-red-500"
                           : "focus:outline-primary outline-white/10"
                       }`}
                     />
-                    <span
-                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
- "
-                    >
-                      {pErr}
-                    </span>
                   </div>
+                  <span
+                    className="text-red-400 left-2 text-xs transition ease-in-out duration-300
+ "
+                  >
+                    {pErr}
+                  </span>
                 </div>
 
                 <div>

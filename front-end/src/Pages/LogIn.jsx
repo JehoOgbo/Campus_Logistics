@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../Contexts/UserContext";
 import validator from "validator";
-
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState();
@@ -42,9 +42,9 @@ export default function Login() {
     }
   }
   return (
-    <div className="bg-linear-to-r from-[#1e3c72] to-[#2a5298] min-h-screen py-7">
-      <div className="flex flex-row rounded-2xl items-center mx-auto container justify-between bg-secondary w-200 shadow-xl/30 ">
-        <div className="bg-[url(/pic5.jpg)] bg-cover bg-center items-end w-full h-155  rounded-2xl"></div>
+    <div className="bg-gradient-to-r from-[#1e3c72] to-[#2a5298] md:min-h-screen sm:min-h-screen md:py-7 h-screen flex justify-center items-center  ">
+      <div className="flex flex-row rounded-2xl items-center  mx-auto md:container justify-between bg-secondary md:w-200 sm:180 md:h-155 shadow-xl/30 w-100 ">
+        <div className="bg-[url(/pic5.jpg)]  bg-cover md:bg-center  items-end  md:w-full md:h-full h-168  rounded-2xl"></div>
         <div className=" w-full min-h-full pl-2 flex flex-col">
           <div className="flex min-h-full flex-col justify-center px-6 py-10 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -68,7 +68,8 @@ export default function Login() {
                   >
                     Email address
                   </label>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <EnvelopeIcon className="absolute h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       type="text"
                       name="email"
@@ -76,19 +77,20 @@ export default function Login() {
                       required
                       onChange={(e) => setEmail(e.target.value)}
                       autoComplete="email"
-                      className={`block  w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
+                      placeholder="youremail@email.com"
+                      className={`block pl-10 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1  placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6 ${
                         mErr
                           ? "focus:outline-red-500 outline-red-500"
                           : "focus:outline-primary outline-white/10"
                       }`}
                     />
-                    <span
-                      className="text-red-400 relative left-2 text-xs transition ease-in-out duration-300
+                  </div>{" "}
+                  <span
+                    className="text-red-400  left-2 text-xs transition ease-in-out duration-300
  "
-                    >
-                      {mErr}
-                    </span>
-                  </div>
+                  >
+                    {mErr}
+                  </span>
                 </div>
                 {/* Password */}
                 <div>
@@ -100,7 +102,8 @@ export default function Login() {
                       Password
                     </label>
                   </div>
-                  <div className="mt-1">
+                  <div className="mt-1 relative">
+                    <LockClosedIcon className=" h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
                     <input
                       id="password"
                       type="password"
@@ -108,7 +111,8 @@ export default function Login() {
                       required
                       onChange={(e) => setPassword(e.target.value)}
                       autoComplete="current-password"
-                      className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
+                      placeholder="••••••••"
+                      className="block pl-10 w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-primary sm:text-sm/6"
                     />
                   </div>
                 </div>
