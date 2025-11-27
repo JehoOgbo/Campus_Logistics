@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function Settings() {
-  const { user, token, setUser } = useContext(UserContext);
+  const { user, token, setUser, setToken } = useContext(UserContext);
   const [pass, setPass] = useState(false);
   const [phone, setPhone] = useState("");
   const [file, setFile] = useState(null);
@@ -39,11 +39,14 @@ export default function Settings() {
 
   const handleAuthUpdate = async (e) => {
     e.preventDefault();
-    if (newPwd != password) setMessage('The passwords don"t match');
+    if (password && newPwd != password) setMessage('The passwords don"t match');
 
     const formData = new FormData();
     if (file) formData.append("image", file);
     try {
+      // if (password){
+      //   const pwdResponse = await.
+      // }
       if (file) {
         const imageResponse = await axios.post(
           `http://localhost:5050/api/v1/senders/upload/${user.id}`,
@@ -64,8 +67,7 @@ export default function Settings() {
         API_BASE_URL,
         {
           name: userName,
-          email: newEmail,
-          password,
+
           phone_number: phone,
         },
 
@@ -74,8 +76,7 @@ export default function Settings() {
         }
       );
       if (response) {
-        localStorage.setItem("token", token);
-        setUser(response.data.all);
+        setUser(response.data);
         navigate("/dashboard/settings");
       }
     } catch (error) {

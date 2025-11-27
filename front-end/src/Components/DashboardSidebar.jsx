@@ -16,14 +16,25 @@ export default function DashboardSidebar() {
   return (
     <>
       <nav className="sticky top-0 flex flex-col w-60 bg-gradient-to-b from-[#1e3c72] to-[#2a5298] text-gray-200   shadow-xl/70 h-screen">
-        <div className="rounded-full bg-primary font-semibold  w-30 h-30 flex items-center justify-center self-center mt-2 border-r-4 shadow-xl/30">
-          <h1 className="p-2 text-5xl ">
-            {user.name
-              .split(" ")
-              .map((word) => word[0])
-              .join(".")
-              .toUpperCase()}
-          </h1>
+        <div
+          className={`rounded-full  font-semibold  w-30 h-30 ${
+            !user.image_path && "bg-primary"
+          } flex items-center justify-center bg-center bg-cover self-center mt-2 border-r-4 shadow-xl/30`}
+          style={
+            user.image_path
+              ? { backgroundImage: `url(${user.image_path})` } // existing image
+              : {}
+          }
+        >
+          {!user.image_path && (
+            <h1 className="p-2 text-5xl ">
+              {user.name
+                .split(" ")
+                .map((word) => word[0])
+                .join(".")
+                .toUpperCase()}
+            </h1>
+          )}
         </div>
         <div className="px-6 font-light pt-2 text-xl">
           <p>Welcome, {user.name}</p>
