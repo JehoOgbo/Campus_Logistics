@@ -119,6 +119,33 @@ def put_sender(sender_id):
     else:
         abort(409)
 
+@app_views.route('/senders/<sender_id>/pwd', methods=['PUT'], strict_slashes=False)
+@jwt_required()
+def put_pwd(sender_id):
+    """ updates the password """
+    sender = storage.get(Sender, sender_id)
+
+    if not sender:
+        abort(404)
+
+    if not request.get_json():
+        abort(400, description="Not a JSON")
+
+    data = request.get_json()
+    old_password = data.get("old_password", None)
+    new_password = data.get("new_password", None)
+
+    if check_password_hash(sender.password, old_password):
+        new_password = generate_password_hash(new_password)
+        setattr(sender, 'password', new_password)
+        value = storage.save()
+        if value == 0:
+            return make_response(jsonify(sender.to_dict()), 200)
+        else:
+            abort(409)
+    return make_response(jsonify({"error": "Incorrect password"}), 401)
+
+
 def allowed_file(filename: str) -> bool:
     """ Checks if the file has an allowed extension
     """
