@@ -39,14 +39,10 @@ export default function Settings() {
 
   const handleAuthUpdate = async (e) => {
     e.preventDefault();
-    if (password && newPwd != password) setMessage('The passwords don"t match');
 
     const formData = new FormData();
     if (file) formData.append("image", file);
     try {
-      // if (password){
-      //   const pwdResponse = await.
-      // }
       if (file) {
         const imageResponse = await axios.post(
           `http://localhost:5050/api/v1/senders/upload/${user.id}`,
@@ -78,6 +74,29 @@ export default function Settings() {
       if (response) {
         setUser(response.data);
         navigate("/dashboard/settings");
+      }
+      if (password) {
+        if (password && newPwd != password) {
+          setMessage("The passwords don't match");
+          return;
+        }
+
+        const pwdResponse = await axios.put(
+          API_BASE_URL + "/pwd",
+          {
+            old_password: oldPwd,
+            new_password: newPwd,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        if (pwdResponse) {
+          localStorage.removeItem("token");
+          setToken(null);
+          navigate("/login");
+        }
       }
     } catch (error) {
       if (error.response) setMessage(error.response.data.message);
