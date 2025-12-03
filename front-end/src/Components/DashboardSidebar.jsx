@@ -37,7 +37,7 @@ export default function DashboardSidebar() {
           )}
         </div>
         <div className="px-6 font-light pt-2 text-xl">
-          <p>Welcome, {user.name}</p>
+          <p>{user.name}</p>
           <button
             className="text-sm font-semibold hover:opacity-50 rounded-2xl"
             onClick={handleSignOut}
@@ -50,6 +50,7 @@ export default function DashboardSidebar() {
           <ul className="flex flex-col p-3">
             {side.map((s) => (
               <NavLink
+                key={s}
                 className={({ isActive }) =>
                   `navlink relative group ${
                     isActive

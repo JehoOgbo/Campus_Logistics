@@ -4,16 +4,19 @@ import Footer from "../Components/Footer";
 import axios from "axios";
 import { UserContext } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import PayButton from "../Components/PayButton";
 
 export default function Delivery() {
   const navigate = useNavigate();
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
   const [locals, setLocals] = useState();
   const [selected, setSelected] = useState();
   const [formOpen, setFormOpen] = useState(false);
   const [feature, setFeature] = useState("");
   const [weight, setWeight] = useState("");
   const [price, setPrice] = useState(0);
+  const [message, setMessage] = useState("");
+  const [confirm, setConfirm] = useState(false);
   useEffect(() => {
     async function handleLocation() {
       try {
@@ -61,8 +64,6 @@ export default function Delivery() {
     try {
       const response = await axios.post(API_BASE_URL, {
         weight,
-        email,
-        password,
       });
       if (response) navigate("/login");
     } catch (error) {
@@ -72,6 +73,7 @@ export default function Delivery() {
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
       <div className=" p-6 text-gray-800">
+        <p className="text-3xl">Welcome, {user.name}</p>
         <h1 className="text-3xl font-bold">Make a new delivery</h1>
         <button
           disabled={formOpen}
@@ -225,8 +227,15 @@ export default function Delivery() {
               >
                 Cancel
               </button>
-              <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
+              {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
                 Proceed
+              </button> */}
+              <PayButton />
+              <button
+                onClick={() => setConfirm(true)}
+                className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
+              >
+                Confirm Delivery
               </button>
             </div>
           </form>

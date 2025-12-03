@@ -15,6 +15,7 @@ export default function Settings() {
   const [oldPwd, setOldPwd] = useState();
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(null);
+  const [pwdChanged, setPwdChanged] = useState(false);
 
   const navigate = useNavigate();
   const API_BASE_URL = `http://localhost:5050/api/v1/senders/${user.id}`;
@@ -93,9 +94,10 @@ export default function Settings() {
         );
 
         if (pwdResponse) {
-          localStorage.removeItem("token");
-          setToken(null);
-          navigate("/login");
+          setPwdChanged(true);
+          // localStorage.removeItem("token");
+          // setToken(null);
+          // navigate("/login");
         }
       }
     } catch (error) {
@@ -191,11 +193,29 @@ export default function Settings() {
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />
+            {pwdChanged && (
+              <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
+                <div className="bg-gradient-to-b from-[#1e3c72] to-[#2a5298] p-6 rounded shadow-xl/30 text-center">
+                  <h1 className="text-xl text-gray-100 font-bold mb-4">
+                    Password Changed Successfully ✅
+                  </h1>
+                  <button
+                    className="bg-primary text-white px-4 py-2 rounded hover:bg-yellow-700"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      setToken(null);
+                      navigate("/login");
+                    }}
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           {/* Change Password */}
           <div>
             <div className="flex justify-between">
-              {" "}
               <button
                 type="button"
                 disabled={pass}
