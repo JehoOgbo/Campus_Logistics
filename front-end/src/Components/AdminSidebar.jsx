@@ -13,7 +13,7 @@ export default function AdminSidebar() {
 
   return (
     <>
-      <nav className="sticky top-0 flex flex-col w-60 bg-gradient-to-b from-[#1e3c72] to-[#2a5298] text-gray-200   shadow-xl/70 h-screen">
+      <nav className="sticky top-0 flex flex-col w-60 bg-secondary text-gray-200   shadow-xl/70 h-screen">
         <div>
           {
             <h1 className="p-2 text-5xl ">

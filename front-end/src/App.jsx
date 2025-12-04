@@ -12,12 +12,16 @@ import { UserProvider } from "./Contexts/UserContext";
 import AuthRoute from "./Components/AuthRoute";
 import Admin from "./AdminPages/Landing";
 import Users from "./AdminPages/Users";
+import CreateAdmin from "./AdminPages/CreateAdmin";
+import AdminLogin from "./AdminPages/LoginAdmin";
 export default function App() {
   const host = window.location.hostname;
   if (host.startsWith("admin")) {
     return (
       <BrowserRouter>
         <Routes>
+          <Route path="/createadmin" element={<CreateAdmin />} />
+          <Route path="/loginadmin" element={<AdminLogin />} />
           <Route path="/" element={<Admin />}>
             <Route path="users" element={<Users />} />
           </Route>
