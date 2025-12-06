@@ -8,6 +8,7 @@ from flasgger.utils import swag_from
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required
 from werkzeug.utils import secure_filename
+from flask_jwt_extended import get_jwt_identity
 import os
 from uuid import uuid4
 
