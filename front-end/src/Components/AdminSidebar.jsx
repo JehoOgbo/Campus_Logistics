@@ -1,15 +1,14 @@
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, Navigate } from "react-router-dom";
 import { useContext } from "react";
 
 export default function AdminSidebar() {
   const side = ["users", "deliveries", "locations", "settings"];
-  //   const navigate = useNavigate;
+  const navigate = useNavigate();
   //   const { user, current, setToken } = useContext(UserContext);
-  //   function handleSignOut() {
-  //     localStorage.removeItem("token");
-  //     setToken(null);
-  //     navigate("/login");
-  //   }
+  function handleSignOut() {
+    localStorage.removeItem("admintoken");
+    navigate("/sorry");
+  }
 
   return (
     <>
@@ -27,7 +26,10 @@ export default function AdminSidebar() {
         </div>
         <div className="px-6 font-light pt-2 text-xl">
           <p>{side[0]}</p>
-          <button className="text-sm font-semibold hover:opacity-50 rounded-2xl">
+          <button
+            onClick={handleSignOut}
+            className="text-sm font-semibold hover:opacity-50 rounded-2xl"
+          >
             Sign Out
           </button>
         </div>

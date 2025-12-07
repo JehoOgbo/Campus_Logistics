@@ -1,8 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 import AdminSidebar from "../Components/AdminSidebar";
+import { useEffect } from "react";
 
 export default function Admin() {
+  const token = localStorage.getItem("admintoken");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) navigate("/sorry");
+  }, []);
   return (
     <div className="bg-gray-300 min-h-screen flex">
       <AdminSidebar />

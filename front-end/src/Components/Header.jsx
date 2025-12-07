@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 export default function Header() {
   return (
     <nav className="bg-[#092238] p-3 text-gray-200 font-semibold shadow-xl/30">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="md:container md:mx-auto flex justify-between items-center">
         <img className="h-15 w-auto mr-4" src="/trace.svg" alt="logo" />
         <div className="space-x-7 text-xl  ">
           <a href="#">Pricing</a>

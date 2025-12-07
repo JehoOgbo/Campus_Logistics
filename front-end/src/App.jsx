@@ -14,12 +14,14 @@ import Admin from "./AdminPages/Landing";
 import Users from "./AdminPages/Users";
 import CreateAdmin from "./AdminPages/CreateAdmin";
 import AdminLogin from "./AdminPages/LoginAdmin";
+import NotAdmin from "./AdminPages/NotAdmin";
 export default function App() {
   const host = window.location.hostname;
   if (host.startsWith("admin")) {
     return (
       <BrowserRouter>
         <Routes>
+          <Route path="/sorry" element={<NotAdmin />} />
           <Route path="/createadmin" element={<CreateAdmin />} />
           <Route path="/loginadmin" element={<AdminLogin />} />
           <Route path="/" element={<Admin />}>
