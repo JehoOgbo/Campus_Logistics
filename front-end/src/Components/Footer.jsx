@@ -53,7 +53,7 @@ const Footer = () => {
 
           {/* Navigation Links (converted to Link) */}
           <div className="text-center md:text-left">
-            <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
+            <h4 className="text-lg font-semibold text-white mb-4">A&U</h4>
             <ul className="space-y-2">
               <li>
                 <Link
