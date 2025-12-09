@@ -68,3 +68,59 @@
 .animate-slide-out {
   animation: slide-out 0.5s ease-out forwards;
 }
+
+@keyframes line-one {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+.animate-line-one {
+  animation: line-one 1.5s ease-in-out infinite;
+}
+
+/* Line Two: slides in from right, out to left */
+@keyframes line-two {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+.animate-line-two {
+  animation: line-two 1.5s ease-in-out infinite;
+}
+
+/* Line Three: slides in from left, out to right (like line one but offset) */
+@keyframes line-three {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+.animate-line-three {
+  animation: line-three 1.5s ease-in-out infinite;
+}

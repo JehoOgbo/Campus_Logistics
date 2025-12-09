@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 export default function MobileHeader() {
   const [menu, setMenu] = useState(false);
   return (
-    <nav className="bg-[#092238] p-3 text-gray-200 font-semibold shadow-xl/30">
+    <nav className="bg-[#092238] p-3 text-gray-200 font-semibold shadow-md  w-full fixed top-0 z-20">
       <div className="flex justify-between  ">
         <img className="h-15  mr-4" src="/trace.svg" alt="logo" />
         <div
@@ -32,7 +32,7 @@ export default function MobileHeader() {
         </div>
 
         <div
-          className={`flex  fixed right-0 shadow-xl/30  top-0  z-50 bg-secondary h-screen w-80 flex-col items-center space-y-6  ${
+          className={`flex  fixed right-0 shadow-xl/30  top-0  z-40 bg-secondary h-screen w-80 flex-col items-center space-y-6  ${
             menu
               ? "animate-slide-in duration-2000"
               : "animate-slide-out duration-2000"

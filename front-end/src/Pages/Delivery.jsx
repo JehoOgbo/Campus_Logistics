@@ -72,8 +72,49 @@ export default function Delivery() {
   };
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
+      <p className="text-3xl text-gray-700 p-3">Welcome, {user.name}</p>
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-secondary rounded-xl shadow-xl/30 p-4 text-center">
+          <p className="text-lg font-semibold">Deliveries Today</p>
+          <p className="text-2xl text-primary font-bold">3</p>
+        </div>
+        <div className="bg-secondary rounded-xl shadow-xl/30 p-4 text-center">
+          <p className="text-lg font-semibold">Pending</p>
+          <p className="text-2xl text-yellow-500 font-bold">2</p>
+        </div>
+        <div className="bg-secondary rounded-xl shadow-xl/30 p-4 text-center">
+          <p className="text-lg font-semibold">Completed</p>
+          <p className="text-2xl text-green-600 font-bold">15</p>
+        </div>
+      </div>
+
+      {/* Helpful Tips */}
+      <div className="bg-gradient-to-b from-[#1e3c72] to-[#2a5298] border-l-4 border-blue-400 p-4 shadow-xl/30 rounded mt-4">
+        <h2 className="font-bold text-gray-100">Delivery Tips</h2>
+        <ul className="list-disc list-inside text-gray-100">
+          <li>Double-check recipient details before confirming.</li>
+          <li>Keep track of delivery times for efficiency.</li>
+          <li>Update status promptly after completion.</li>
+        </ul>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="pt-2">
+        <h2 className="text-xl text-gray-700 font-bold mb-2">
+          Recent Deliveries
+        </h2>
+        <ul className="space-y-2">
+          <li className="bg-gray-700 p-3 rounded">
+            📦 Order #1234 — Completed
+          </li>
+          <li className="bg-gray-700 p-3 rounded">📦 Order #1235 — Pending</li>
+          <li className="bg-gray-700 p-3 rounded">
+            📦 Order #1236 — Completed
+          </li>
+        </ul>
+      </div>
       <div className=" p-6 text-gray-800">
-        <p className="text-3xl">Welcome, {user.name}</p>
         <h1 className="text-3xl font-bold">Make a new delivery</h1>
         <button
           disabled={formOpen}
@@ -87,6 +128,7 @@ export default function Delivery() {
           New Delivery +
         </button>
       </div>
+
       {formOpen && (
         <div className="px-6  rounded border-gray-800 text-xl w-150 font-bold animate-fade-in-up duration-100">
           <h2 className="text-gray-500 py-2">Delivery Details</h2>
