@@ -6,6 +6,7 @@ from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
 
 
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
@@ -65,7 +66,7 @@ def post_state():
     Creates a State
     """
     current_user = get_jwt_identity()
-    if current_user.user_type != "admin":
+    if current_user["user_type"] != "admin":
         return jsonify({"message": "Access denied"}), 403
     if not request.get_json():
         abort(400, description="Not a JSON")
