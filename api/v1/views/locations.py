@@ -75,7 +75,7 @@ def post_location(city_id):
     Creates a Location
     """
     current_user = get_jwt_identity()
-    if current_user.user_type != "admin":
+    if current_user["user_type"] != "admin":
         return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
 

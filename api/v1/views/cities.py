@@ -71,7 +71,7 @@ def post_city(state_id):
     Creates a City
     """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user["user_type"] != "admin":
         return jsonify({"message": "Access denied"}), 403
     state = storage.get(State, state_id)
     if not state:

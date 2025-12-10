@@ -6,9 +6,58 @@ export default function Location() {
   const token = localStorage.getItem("admintoken");
   const [newLocation, setNewLocation] = useState();
   const [states, setStates] = useState("");
+  const [stateID, setStateID] = useState("");
+  const [cityName, setCityName] = useState("");
+  const [city, setCity] = useState("");
   const [admin, setAdmin] = useState();
+  const [location, setLocation] = useState("");
+  const [statesOb, setStatesOb] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const API_BASE_URL = "http://localhost:5050/api/v1/dashboard";
+
+  useEffect(() => {
+    const stateList = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5050/api/v1/states",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response) {
+          setStatesOb(response.data);
+          console.log(response.data);
+        }
+      } catch (err) {
+        const error = err.response?.status;
+        console.log(error);
+      }
+    };
+    stateList();
+  }, []);
+
+  useEffect(() => {
+    Object.entries(statesOb).forEach(([key, value]) => {
+      console.log(key, value);
+      //   const cityList = async () => {
+      //     try {
+      //       const response = await axios.get(
+      //         `http://localhost:5050/api/v1/states/${state.id}/cities`,
+      //         {
+      //           headers: { Authorization: `Bearer ${token}` },
+      //         }
+      //       );
+      //       if (response) {
+      //         city(response.data);
+      //       }
+      //     } catch (err) {
+      //       const error = err.response?.status;
+      //       console.log(error);
+      //     }
+      //   };
+      //   cityList();
+    });
+  }, [statesOb]);
 
   useEffect(() => {
     const authCheck = async () => {
@@ -25,7 +74,8 @@ export default function Location() {
         console.log(response.data.all);
       } catch (err) {
         setAdmin(null);
-        console.log(err);
+        const error = err.response?.status;
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
@@ -45,9 +95,30 @@ export default function Location() {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      if (stateResponse) console.log("good");
+      if (stateResponse) setStateID(stateResponse.data.id);
+
+      const cityResponse = await axios.post(
+        `http://localhost:5050/api/v1/states/${stateID}/cities`,
+        { name: cityName, user_type: admin.user_type },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (cityResponse) setCity(cityResponse.data);
+
+      const locationResponse = await axios.post(
+        `http://localhost:5050/api/v1/cities/${city.id}/locations`,
+        {
+          name: location,
+          sender_id: admin.id,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (locationResponse) console.log("yesssss!");
     } catch (err) {
-      console.log(err);
+      console.log(err.locationResponse);
     }
   };
   if (isLoading) return <Loader />;
@@ -59,6 +130,48 @@ export default function Location() {
       >
         Create new location
       </button>
+      {/* Table */}
+      <div className="overflow-x-auto relative">
+        <table className="min-w-full text-sm text-left text-gray-700">
+          <thead className="text-xs text-gray-700 uppercase ">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Location
+              </th>
+              <th scope="col" className="px-6 py-3">
+                State
+              </th>
+              <th scope="col" className="px-6 py-3">
+                City
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {statesOb.map((statesOb) => (
+              <tr className=" border-b border-gray-100">
+                <th
+                  scope="row"
+                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                >
+                  {statesOb.name}
+                </th>
+
+                <td class="px-6 py-4">{statesOb.id}</td>
+                <td class="px-6 py-4">{statesOb.created_at}</td>
+                {/* {city.map((city) => (
+                  <td class="px-6 py-4">{city.name}</td>
+                ))} */}
+
+                <td class="px-6 py-4">
+                  <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                    Active
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {newLocation ? (
         <div className="fixed inset-0 flex  items-center justify-center bg-black/40 z-50">
@@ -96,6 +209,9 @@ export default function Location() {
                 <input
                   type="text"
                   name="city"
+                  required
+                  value={cityName}
+                  onChange={(e) => setCityName(e.target.value)}
                   className="w-full rounded-md border border-gray-300 p-2 focus:ring focus:ring-gray-400 focus:outline-none"
                 />
               </div>
@@ -106,6 +222,9 @@ export default function Location() {
                 <input
                   type="text"
                   name="location"
+                  required
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   className="w-full rounded-md border border-gray-300 p-2 focus:ring focus:ring-gray-400 focus:outline-none"
                 />
               </div>
