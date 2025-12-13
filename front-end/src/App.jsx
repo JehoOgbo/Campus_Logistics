@@ -16,6 +16,7 @@ import CreateAdmin from "./AdminPages/CreateAdmin";
 import AdminLogin from "./AdminPages/LoginAdmin";
 import NotAdmin from "./AdminPages/NotAdmin";
 import Location from "./AdminPages/Locations";
+import LocationModal from "./AdminPages/Locations";
 export default function App() {
   const host = window.location.hostname;
   if (host.startsWith("admin")) {
@@ -26,8 +27,8 @@ export default function App() {
           <Route path="/createadmin" element={<CreateAdmin />} />
           <Route path="/loginadmin" element={<AdminLogin />} />
           <Route path="/" element={<Admin />}>
-            <Route path="users" element={<Users />} />
-            <Route path="locations" element={<Location />} />
+            <Route index element={<Users />} />
+            <Route path="locations" element={<LocationModal />} />
           </Route>
         </Routes>
       </BrowserRouter>

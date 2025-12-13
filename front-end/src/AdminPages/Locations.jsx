@@ -2,257 +2,239 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Loader from "../Components/Loader";
 
-export default function Location() {
+export default function LocationModal() {
   const token = localStorage.getItem("admintoken");
-  const [newLocation, setNewLocation] = useState();
-  const [states, setStates] = useState("");
-  const [stateID, setStateID] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const [statesOb, setStatesOb] = useState([]);
+  const [selectedStateForCity, setSelectedStateForCity] = useState("");
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+
+  const [newStateName, setNewStateName] = useState("");
   const [cityName, setCityName] = useState("");
-  const [city, setCity] = useState("");
+  const [locationName, setLocationName] = useState("");
+
   const [admin, setAdmin] = useState();
-  const [location, setLocation] = useState("");
-  const [statesOb, setStatesOb] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
   const API_BASE_URL = "http://localhost:5050/api/v1/dashboard";
 
+  // Fetch states + admin
   useEffect(() => {
-    const stateList = async () => {
+    const load = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5050/api/v1/states",
-          {
+        const [statesRes, adminRes] = await Promise.all([
+          axios.get("http://localhost:5050/api/v1/states", {
             headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (response) {
-          setStatesOb(response.data);
-          console.log(response.data);
-        }
-      } catch (err) {
-        const error = err.response?.status;
-        console.log(error);
-      }
-    };
-    stateList();
-  }, []);
-
-  useEffect(() => {
-    Object.entries(statesOb).forEach(([key, value]) => {
-      console.log(key, value);
-      //   const cityList = async () => {
-      //     try {
-      //       const response = await axios.get(
-      //         `http://localhost:5050/api/v1/states/${state.id}/cities`,
-      //         {
-      //           headers: { Authorization: `Bearer ${token}` },
-      //         }
-      //       );
-      //       if (response) {
-      //         city(response.data);
-      //       }
-      //     } catch (err) {
-      //       const error = err.response?.status;
-      //       console.log(error);
-      //     }
-      //   };
-      //   cityList();
-    });
-  }, [statesOb]);
-
-  useEffect(() => {
-    const authCheck = async () => {
-      try {
-        if (!token) {
-          setAdmin(null);
-          setIsLoading(false);
-          return;
-        }
-        const response = await axios.get(API_BASE_URL, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setAdmin(response.data.all);
-        console.log(response.data.all);
-      } catch (err) {
-        setAdmin(null);
-        const error = err.response?.status;
-        console.log(error);
+          }),
+          axios.get(API_BASE_URL, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+        setStatesOb(statesRes.data);
+        setAdmin(adminRes.data.all);
+      } catch (e) {
+        console.log(e.response?.status);
       } finally {
         setIsLoading(false);
       }
     };
-    authCheck();
+    load();
   }, [token]);
 
-  const handleLocation = async (e) => {
-    e.preventDefault();
+  // Fetch cities when state changes
+  useEffect(() => {
+    if (!selectedStateForCity) {
+      setCities([]);
+      return;
+    }
+    const fetchCities = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:5050/api/v1/states/${selectedStateForCity}/cities`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCities(res.data);
+      } catch (err) {
+        console.error(err.response?.status);
+      }
+    };
+    fetchCities();
+  }, [selectedStateForCity, token]);
+
+  // Add State
+  const addState = async () => {
     try {
-      console.log(states);
-
-      const stateResponse = await axios.post(
+      await axios.post(
         "http://localhost:5050/api/v1/states",
-        { name: states, user_type: admin.user_type },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { name: newStateName, user_type: admin.user_type },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (stateResponse) setStateID(stateResponse.data.id);
-
-      const cityResponse = await axios.post(
-        `http://localhost:5050/api/v1/states/${stateID}/cities`,
-        { name: cityName, user_type: admin.user_type },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (cityResponse) setCity(cityResponse.data);
-
-      const locationResponse = await axios.post(
-        `http://localhost:5050/api/v1/cities/${city.id}/locations`,
-        {
-          name: location,
-          sender_id: admin.id,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (locationResponse) console.log("yesssss!");
-    } catch (err) {
-      console.log(err.locationResponse);
+      const res = await axios.get("http://localhost:5050/api/v1/states", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setStatesOb(res.data);
+      setNewStateName("");
+    } catch (e) {
+      console.log(e.response?.status);
     }
   };
+
+  // Add City
+  const addCity = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5050/api/v1/states/${selectedStateForCity}/cities`,
+        { name: cityName, user_type: admin.user_type },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // refresh cities
+      const res = await axios.get(
+        `http://localhost:5050/api/v1/states/${selectedStateForCity}/cities`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCities(res.data);
+      setCityName("");
+    } catch (e) {
+      console.log(e.response?.status);
+    }
+  };
+
+  // Add Location
+  const addLocation = async () => {
+    try {
+      await axios.post(
+        `http://localhost:5050/api/v1/cities/${selectedCity}/locations`,
+        { name: locationName, sender_id: admin.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLocationName("");
+    } catch (e) {
+      console.log(e.response?.status);
+    }
+  };
+
   if (isLoading) return <Loader />;
+
   return (
     <>
       <button
-        onClick={() => setNewLocation(true)}
-        className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
+        onClick={() => setOpen(true)}
+        className="px-4 py-2 text-gray-700 rounded-md hover:bg-orange-500 hover:text-white hover:shadow-xl transition"
       >
         Create new location
       </button>
-      {/* Table */}
-      <div className="overflow-x-auto relative">
-        <table className="min-w-full text-sm text-left text-gray-700">
-          <thead className="text-xs text-gray-700 uppercase ">
-            <tr>
-              <th scope="col" className="px-6 py-3">
-                Location
-              </th>
-              <th scope="col" className="px-6 py-3">
-                State
-              </th>
-              <th scope="col" className="px-6 py-3">
-                City
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {statesOb.map((statesOb) => (
-              <tr className=" border-b border-gray-100">
-                <th
-                  scope="row"
-                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                >
-                  {statesOb.name}
-                </th>
 
-                <td class="px-6 py-4">{statesOb.id}</td>
-                <td class="px-6 py-4">{statesOb.created_at}</td>
-                {/* {city.map((city) => (
-                  <td class="px-6 py-4">{city.name}</td>
-                ))} */}
-
-                <td class="px-6 py-4">
-                  <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                    Active
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {newLocation ? (
-        <div className="fixed inset-0 flex  items-center justify-center bg-black/40 z-50">
-          <div className="bg-gray-100 animate-slide-up rounded-xl shadow-lg p-6 w-full max-w-md">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                Add Location
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60">
+          <div className="w-full max-w-lg rounded-xl bg-gray-50 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+              <h2 className="text-lg font-semibold text-orange-600">
+                Add State, City & Location
               </h2>
               <button
-                onClick={() => setNewLocation(false)}
-                className="text-gray-500 hover:text-gray-700 animate-slide-up transition hover:text-xl"
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-200"
               >
-                ✕
+                Close
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleLocation} className="space-y-4">
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">
+            <div className="space-y-6 px-6 py-6">
+              {/* State Field */}
+              <div className="grid grid-cols-12 items-center gap-3">
+                <label className="col-span-3 text-sm font-medium text-gray-700">
                   State
                 </label>
                 <input
                   type="text"
-                  name="state"
-                  value={states}
-                  required
-                  onChange={(e) => setStates(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 p-2 focus:ring focus:ring-gray-400 focus:outline-none"
+                  value={newStateName}
+                  onChange={(e) => setNewStateName(e.target.value)}
+                  className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                  placeholder="Enter state name"
                 />
+                <button
+                  onClick={addState}
+                  className="col-span-2 rounded-md bg-orange-500 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+                >
+                  Add
+                </button>
               </div>
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">City</label>
+              <div className="grid grid-cols-12 items-center gap-3">
+                <label className="col-span-3 text-sm font-medium text-gray-700">
+                  Select State before creating City or Location
+                </label>
+                <select
+                  value={selectedStateForCity}
+                  onChange={(e) => setSelectedStateForCity(e.target.value)}
+                  className="col-span-3 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select state</option>
+                  {statesOb.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* City Field */}
+              <div className="grid grid-cols-12 items-center gap-3">
+                <label className="col-span-3 text-sm font-medium text-gray-700">
+                  City
+                </label>
                 <input
                   type="text"
-                  name="city"
-                  required
                   value={cityName}
                   onChange={(e) => setCityName(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 p-2 focus:ring focus:ring-gray-400 focus:outline-none"
+                  className="col-span-4 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                  placeholder="Enter city name"
                 />
+
+                <button
+                  onClick={addCity}
+                  disabled={!selectedStateForCity || !cityName}
+                  className="col-span-2 rounded-md bg-orange-500 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:bg-orange-600"
+                >
+                  Add
+                </button>
               </div>
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">
+
+              {/* Location Field */}
+              <div className="grid grid-cols-12 items-center gap-3">
+                <label className="col-span-3 text-sm font-medium text-gray-700">
                   Location
                 </label>
                 <input
                   type="text"
-                  name="location"
-                  required
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 p-2 focus:ring focus:ring-gray-400 focus:outline-none"
+                  value={locationName}
+                  onChange={(e) => setLocationName(e.target.value)}
+                  className="col-span-4 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                  placeholder="Enter location name"
                 />
+                <select
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  className="col-span-5 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                >
+                  <option value="">Select city</option>
+                  {cities.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={addLocation}
+                  disabled={!selectedCity || !locationName}
+                  className="col-span-2 rounded-md bg-orange-500 px-3 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:bg-orange-600"
+                >
+                  Add
+                </button>
               </div>
-
-              {/* Submit button */}
-              <button
-                type="submit"
-                className="w-full rounded-md p-2 text-white font-semibold 
-                       bg-orange-600 hover:bg-orange-700 
-                       transition-colors duration-200 ease-out"
-              >
-                Save
-              </button>
-              {/* Alternative gray style:
-          <button
-            type="submit"
-            className="w-full rounded-md p-2 text-white font-semibold 
-                       bg-gray-700 hover:bg-gray-800 
-                       transition-colors duration-200 ease-out"
-          >
-            Save
-          </button>
-          */}
-            </form>
+            </div>
           </div>
         </div>
-      ) : (
-        "as"
       )}
     </>
   );
