@@ -9,10 +9,11 @@ import DeliveryTips from "../Components/Deliverytips";
 
 export default function Delivery() {
   const tips = [
-    "Double-check the recipient’s address before dispatch.",
-    "Call ahead to confirm someone is available to receive.",
-    "Handle fragile packages with extra care.",
-    "Keep customers updated with real-time tracking.",
+    "✅ Double‑check your address and phone number",
+    "📦 Be available to receive your package",
+    "🔔 Track your delivery for updates",
+    "📝 Add clear notes for special instructions",
+    "🔒 Inspect items before confirming receipt",
   ];
   const navigate = useNavigate();
   const { token, user } = useContext(UserContext);
@@ -201,7 +202,7 @@ export default function Delivery() {
               <label htmlFor="from" className="w-65">
                 From:{" "}
               </label>
-              <select className="ml-1 shadow-xl p-1 text-sm font-semibold focus:border-transparent focus:outline-none bg-primary text-gray-100 rounded-md">
+              <select className="col-span-3 rounded-md  text-gray-100 bg-primary px-3 py-2 text-sm focus:border-transparent focus:outline-none shadow-md">
                 <option className="">Samaru Campus</option>
                 <option>Kongo Campus</option>
               </select>
@@ -211,7 +212,7 @@ export default function Delivery() {
               <label htmlFor="from" className="w-65">
                 To:{" "}
               </label>
-              <select className="col-span-3 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none">
+              <select className="col-span-3 rounded-md  text-gray-100 bg-primary px-3 py-2 text-sm focus:border-transparent focus:outline-none shadow-md">
                 <option className="bg-secondary">Samaru Campus</option>
                 <option>Kongo Campus</option>
               </select>
