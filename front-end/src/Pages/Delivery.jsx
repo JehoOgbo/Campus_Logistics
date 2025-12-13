@@ -1,12 +1,19 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DashboardSidebar from "../Components/DashboardSidebar";
 import Footer from "../Components/Footer";
 import axios from "axios";
 import { UserContext } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import PayButton from "../Components/PayButton";
+import DeliveryTips from "../Components/Deliverytips";
 
 export default function Delivery() {
+  const tips = [
+    "Double-check the recipient’s address before dispatch.",
+    "Call ahead to confirm someone is available to receive.",
+    "Handle fragile packages with extra care.",
+    "Keep customers updated with real-time tracking.",
+  ];
   const navigate = useNavigate();
   const { token, user } = useContext(UserContext);
   const [locals, setLocals] = useState();
@@ -17,6 +24,22 @@ export default function Delivery() {
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
   const [confirm, setConfirm] = useState(false);
+  const lastFieldRef = useRef(null);
+
+  useEffect(() => {
+    if (formOpen && lastFieldRef.current) {
+      // Delay scrolling by 500ms
+      const timer = setTimeout(() => {
+        lastFieldRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 700);
+
+      // Cleanup if component unmounts before timeout
+      return () => clearTimeout(timer);
+    }
+  }, [formOpen]);
   useEffect(() => {
     async function handleLocation() {
       try {
@@ -25,7 +48,6 @@ export default function Delivery() {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setLocals(response.data);
-        console.log(response.data);
       } catch (err) {
         console.error("Failed to fetch states:", err);
       }
@@ -73,28 +95,27 @@ export default function Delivery() {
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
       <p className="text-3xl text-gray-700 p-3">Welcome, {user.name}</p>
-      <div className=" p-2 text-gray-800">
-        <h1 className="text-3xl font-bold">Make a new delivery</h1>
+      <div className=" p-2 text-gray-700">
+        <h1 className="text-3xl font-bold text-primary">
+          Ready to send something?
+        </h1>
+        <p className="mt-1 text-gray-600 text-sm md:text-md">
+          Your delivery starts here — simple, fast, reliable.
+        </p>
         {/* Helpful Tips */}
-        <div className="bg-gradient-to-b from-[#1e3c72] to-[#2a5298] border-l-4 border-blue-600 p-4 shadow-xl/30 rounded mt-4">
-          <h2 className="font-bold text-gray-100">Delivery Tips</h2>
-          <ul className="list-disc list-inside text-gray-100">
-            <li>Double-check recipient details before confirming.</li>
-            <li>Keep track of delivery times for efficiency.</li>
-            <li>Update status promptly after completion.</li>
-          </ul>
-        </div>
+        <DeliveryTips tips={tips} />
 
+        {/* Action Button */}
         <button
           disabled={formOpen}
-          className={`rounded-2xl text-gray-200 bg-primary p-2 tracking-wider text-xl  shadow-xl mt-5   ${
+          onClick={handleFormOpen}
+          className={`rounded-2xl text-gray-100 bg-primary px-5 py-3 tracking-wide text-lg font-semibold shadow-lg mt-6 ${
             formOpen
-              ? "opacity-30"
+              ? "opacity-40 cursor-not-allowed"
               : "hover:scale-105 transition-transform duration-300 ease-in-out"
           }`}
-          onClick={handleFormOpen}
         >
-          New Delivery +
+          Start New Delivery +
         </button>
       </div>
 
@@ -113,7 +134,7 @@ export default function Delivery() {
                 name="description"
                 required
                 placeholder="Name of package"
-                className="ml-1 px-2  border-0.5 rounded-md bg-gray-300 w-40  text-sm font-medium focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
               />
             </div>
             {/* Features */}
@@ -170,7 +191,7 @@ export default function Delivery() {
                 type="number"
                 min={1}
                 required
-                className="ml-1 px-2 border-0.5 rounded-md bg-gray-300 w-15 focus:outline-none focus:border-transparent "
+                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none "
                 value={weight}
                 onChange={(e) => setWeight(Number(e.target.value))}
               />
@@ -190,8 +211,8 @@ export default function Delivery() {
               <label htmlFor="from" className="w-65">
                 To:{" "}
               </label>
-              <select className="ml-1 shadow-xl p-1 text-sm font-semibold focus:border-transparent focus:outline-none bg-primary text-gray-100 rounded-md">
-                <option className="">Samaru Campus</option>
+              <select className="col-span-3 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none">
+                <option className="bg-secondary">Samaru Campus</option>
                 <option>Kongo Campus</option>
               </select>
             </div>
@@ -201,19 +222,18 @@ export default function Delivery() {
               <label className="text-md w-65 ">Your Phone Number: </label>
               <input
                 type="tel"
-                className="ml-1 px-2 border-0.5 rounded-md font-medium text-sm bg-gray-300 w-36 focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
                 value={user.phone_number}
               />
             </div>
             {/* Recipient's Phone Number */}
             <div className="flex flex-row ">
-              {" "}
               <label className="text-md w-65 ">
                 Recipient's Phone Number:{" "}
               </label>
               <input
                 type="tel"
-                className="ml-1 px-2 border-0.5 font-medium text-sm rounded-md bg-gray-300 w-36 focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
               />
             </div>
             {/* Description */}
@@ -223,13 +243,18 @@ export default function Delivery() {
                 type="text"
                 name="description"
                 placeholder="Write a short of description of the package"
-                className="ml-1 px-2 border-0.5 rounded-md bg-gray-300 w-75 pb-20 text-sm font-medium focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 w-60 pb-10 text-sm focus:border-orange-500 focus:outline-none"
               />
             </div>
             {/* Price */}
-            <div className="flex justify-end mt-4">
-              <div className="text-right text-xl p-2 rounded-md bg-primary text-gray-100 font-semibold">
-                Total Price: ₦{price}
+            <div className="flex mt-4 justify-end">
+              <div className="inline-block px-6 py-4 rounded-lg bg-primary text-gray-100 shadow-md">
+                <span className="block text-sm uppercase tracking-wide opacity-80">
+                  Total Price
+                </span>
+                <span className="block text-2xl font-bold">
+                  ₦{price.toLocaleString()}
+                </span>
               </div>
             </div>
             {/* CTA */}
@@ -246,6 +271,7 @@ export default function Delivery() {
               </button> */}
               <PayButton />
               <button
+                ref={lastFieldRef}
                 onClick={() => setConfirm(true)}
                 className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
               >
