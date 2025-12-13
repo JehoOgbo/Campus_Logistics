@@ -46,7 +46,7 @@ export default function AdminSidebar() {
                       : " px-2 py-2 text-xl  hover:opacity-50 rounded-2xl"
                   }`
                 }
-                to={`${s}`}
+                to={`${s === "users" ? "/" : s}`}
               >
                 {s.charAt(0).toUpperCase() + s.slice(1)}
               </NavLink>

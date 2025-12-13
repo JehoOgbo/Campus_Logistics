@@ -10,11 +10,12 @@ export default function LocationModal() {
   const [selectedStateForCity, setSelectedStateForCity] = useState("");
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
-
+  const [expandState, setExpandState] = useState(false);
+  const [expandCity, setExpandCity] = useState(false);
   const [newStateName, setNewStateName] = useState("");
   const [cityName, setCityName] = useState("");
   const [locationName, setLocationName] = useState("");
-
+  const [locations, setLocations] = useState([]);
   const [admin, setAdmin] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -80,6 +81,21 @@ export default function LocationModal() {
       console.log(e.response?.status);
     }
   };
+  const expandCities = async (c) => {
+    setExpandCity(c);
+    setSelectedCity(c);
+    if (!c) return;
+    try {
+      // refresh locations
+      const res = await axios.get(
+        `http://localhost:5050/api/v1/cities/${c}/locations`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLocations(res.data);
+    } catch (e) {
+      console.log(e.response?.status);
+    }
+  };
 
   // Add City
   const addCity = async () => {
@@ -100,7 +116,20 @@ export default function LocationModal() {
       console.log(e.response?.status);
     }
   };
-
+  const expandStates = async (s) => {
+    setExpandState(s);
+    setSelectedStateForCity(s);
+    try {
+      // refresh cities
+      const res = await axios.get(
+        `http://localhost:5050/api/v1/states/${s}/cities`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setCities(res.data);
+    } catch (e) {
+      console.log(e.response?.status);
+    }
+  };
   // Add Location
   const addLocation = async () => {
     try {
@@ -119,6 +148,9 @@ export default function LocationModal() {
 
   return (
     <>
+      <h1 className="text-xl font-semibold text-primary">
+        State, City & Location
+      </h1>
       <button
         onClick={() => setOpen(true)}
         className="px-4 py-2 text-gray-700 rounded-md hover:bg-orange-500 hover:text-white hover:shadow-xl transition"
@@ -130,7 +162,7 @@ export default function LocationModal() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60">
           <div className="w-full max-w-lg rounded-xl bg-gray-50 shadow-2xl">
             <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-              <h2 className="text-lg font-semibold text-orange-600">
+              <h2 className="text-lg font-semibold text-primary">
                 Add State, City & Location
               </h2>
               <button
@@ -163,7 +195,7 @@ export default function LocationModal() {
               </div>
               <div className="grid grid-cols-12 items-center gap-3">
                 <label className="col-span-3 text-sm font-medium text-gray-700">
-                  Select State before creating City or Location
+                  Select State
                 </label>
                 <select
                   value={selectedStateForCity}
@@ -236,6 +268,83 @@ export default function LocationModal() {
           </div>
         </div>
       )}
+
+      {/* Table */}
+      <div className="overflow-x-auto relative">
+        <table className="min-w-full text-sm text-left text-gray-700">
+          <thead className="text-xs text-gray-700 uppercase">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                States
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {statesOb.map((state) => (
+              <>
+                {/* State row */}
+                <tr
+                  key={state.id}
+                  className="border-b border-gray-100 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => expandStates(state.id)}
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap hover:text-primary"
+                  >
+                    {state.name}
+                  </th>
+                  <td className="px-6 py-4">
+                    <span className="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                      Active
+                    </span>
+                  </td>
+                </tr>
+
+                {/* Expanded subrow for cities */}
+                {expandState === state.id && (
+                  <tr>
+                    <td colSpan={2} className="px-8 py-3">
+                      <div className="space-y-2">
+                        {cities.map((city) => (
+                          <div
+                            key={city.id}
+                            className="flex items-center justify-between  pb-2 cursor-pointer hover:text-primary"
+                          >
+                            <span onClick={() => expandCities(city.id)}>
+                              {city.name}
+                            </span>
+                            <button className="rounded-md bg-orange-500 px-3 py-1 text-sm text-white hover:bg-primary">
+                              Edit
+                            </button>
+
+                            {/* Nested locations under city */}
+                            {expandCity === city.id && (
+                              <div className="ml-6 mt-2 space-y-1 text-sm text-gray-700">
+                                {locations.map((location) => (
+                                  <div className="flex items-center justify-between">
+                                    <span>{location.name} </span>
+                                    <button className="rounded-md bg-orange-500 px-3 py-1 ml-2 text-xs text-white hover:bg-primary">
+                                      Edit
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
