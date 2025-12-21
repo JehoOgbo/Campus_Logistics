@@ -115,7 +115,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col w-150">
+    <div className="flex min-h-screen  animate-fade-in-up duration-300 flex-col w-150">
       <div className="px-6">
         <form
           className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700 "

@@ -97,14 +97,14 @@ export default function Delivery() {
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
       <p className="text-3xl text-gray-700 p-3">Welcome, {user.name}</p>
       <div className=" p-2 text-gray-700">
-        <h1 className="text-3xl font-bold text-primary">
+        <h1 className="text-3xl font-bold text-gray-700">
           Ready to send something?
         </h1>
         <p className="mt-1 text-gray-600 text-sm md:text-md">
           Your delivery starts here — simple, fast, reliable.
         </p>
         {/* Helpful Tips */}
-        <DeliveryTips tips={tips} />
+        {!formOpen && <DeliveryTips tips={tips} />}
 
         {/* Action Button */}
         <button
@@ -135,7 +135,7 @@ export default function Delivery() {
                 name="description"
                 required
                 placeholder="Name of package"
-                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                className="col-span-7 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
               />
             </div>
             {/* Features */}
@@ -192,7 +192,7 @@ export default function Delivery() {
                 type="number"
                 min={1}
                 required
-                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none "
+                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none "
                 value={weight}
                 onChange={(e) => setWeight(Number(e.target.value))}
               />
@@ -223,7 +223,7 @@ export default function Delivery() {
               <label className="text-md w-65 ">Your Phone Number: </label>
               <input
                 type="tel"
-                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
                 value={user.phone_number}
               />
             </div>
@@ -234,7 +234,7 @@ export default function Delivery() {
               </label>
               <input
                 type="tel"
-                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
               />
             </div>
             {/* Description */}
@@ -244,7 +244,7 @@ export default function Delivery() {
                 type="text"
                 name="description"
                 placeholder="Write a short of description of the package"
-                className="col-span-7 rounded-md border-2 border-gray-300 px-3 py-2 w-60 pb-10 text-sm focus:border-orange-500 focus:outline-none"
+                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 w-60 pb-10 text-sm focus:border-orange-500 focus:outline-none"
               />
             </div>
             {/* Price */}
@@ -270,7 +270,7 @@ export default function Delivery() {
               {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
                 Proceed
               </button> */}
-              <PayButton />
+              <PayButton amount={price} />
               <button
                 ref={lastFieldRef}
                 onClick={() => setConfirm(true)}
