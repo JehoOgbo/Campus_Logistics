@@ -174,7 +174,7 @@ export default function Settings() {
             <input
               type="tel"
               className="ml-1 px-2 border-0.5 rounded-md font-medium text-sm bg-gray-300 w-40 focus:outline-none"
-              value={phone}
+              value={phone || user.phone_number}
               onChange={(e) => setPhone(e.target.value)}
               placeholder={user.phone_number}
             />
@@ -182,7 +182,7 @@ export default function Settings() {
           {/* Email */}
           <div className="flex flex-row ">
             <label className="w-65 text-gray-700 font-medium text-md">
-              Your Email:{" "}
+              Your Email:
             </label>
             <input
               type="email"
@@ -190,7 +190,6 @@ export default function Settings() {
               disabled
               placeholder={user.email}
               className="ml-1 px-2   border-0.5 rounded-md bg-gray-300 w-40  text-sm font-medium focus:outline-none"
-              value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
             />
             {pwdChanged && (
@@ -280,12 +279,12 @@ export default function Settings() {
           </div>
           {/* CTA */}
           <div className="flex justify-between">
-            <button
+            {/* <button
               type="button"
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
             >
               Cancel
-            </button>
+            </button> */}
             <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
               Save Settings
             </button>

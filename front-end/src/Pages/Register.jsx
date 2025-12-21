@@ -145,7 +145,7 @@ export default function Register() {
                     Email address
                   </label>
                   <div className="mt-1 relative">
-                    <EnvelopeIcon className="absolute h-5 w-5 left-2 text-gray-600 absolute -translate-y-1/2 top-1/2" />
+                    <EnvelopeIcon className="absolute h-5 w-5 left-2 text-gray-600  -translate-y-1/2 top-1/2" />
                     <input
                       value={email}
                       type="text"

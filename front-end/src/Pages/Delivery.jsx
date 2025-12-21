@@ -1,98 +1,46 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import DashboardSidebar from "../Components/DashboardSidebar";
-import Footer from "../Components/Footer";
-import axios from "axios";
+import { useContext, useState } from "react";
+
 import { UserContext } from "../Contexts/UserContext";
-import { useNavigate } from "react-router-dom";
-import PayButton from "../Components/PayButton";
-import DeliveryTips from "../Components/Deliverytips";
+
+import History from "./History";
+import DeliveryForm from "../Components/DeliveryForm";
 
 export default function Delivery() {
-  const tips = [
-    "✅ Double‑check your address and phone number",
-    "📦 Be available to receive your package",
-    "🔔 Track your delivery for updates",
-    "📝 Add clear notes for special instructions",
-    "🔒 Inspect items before confirming receipt",
-  ];
-  const navigate = useNavigate();
-  const { token, user } = useContext(UserContext);
-  const [locals, setLocals] = useState();
-  const [selected, setSelected] = useState();
+  // const tips = [
+  //   "✅ Double‑check your address and phone number",
+  //   "📦 Be available to receive your package",
+  //   "🔔 Track your delivery for updates",
+  //   "📝 Add clear notes for special instructions",
+  //   "🔒 Inspect items before confirming receipt",
+  // ];
+
+  const { user } = useContext(UserContext);
+
   const [formOpen, setFormOpen] = useState(false);
-  const [feature, setFeature] = useState("");
-  const [weight, setWeight] = useState("");
-  const [price, setPrice] = useState(0);
-  const [message, setMessage] = useState("");
-  const [confirm, setConfirm] = useState(false);
-  const lastFieldRef = useRef(null);
 
-  useEffect(() => {
-    if (formOpen && lastFieldRef.current) {
-      // Delay scrolling by 500ms
-      const timer = setTimeout(() => {
-        lastFieldRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 700);
-
-      // Cleanup if component unmounts before timeout
-      return () => clearTimeout(timer);
-    }
-  }, [formOpen]);
-  useEffect(() => {
-    async function handleLocation() {
-      try {
-        const response = await axios.get(
-          "http://localhost:5050/api/v1/states",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setLocals(response.data);
-      } catch (err) {
-        console.error("Failed to fetch states:", err);
-      }
-    }
-    handleLocation();
-  }, [token]);
-  useEffect(() => {
-    let wPrice;
-    if (weight === 1 && weight != 0) {
-      wPrice = 500;
-    } else if (weight <= 5 && weight > 1) {
-      wPrice = 2500;
-    } else if (weight > 5) {
-      wPrice = (weight - 5) * 900 + 2500;
-    }
-    if (weight === 0) {
-      wPrice = 0;
-      setPrice(wPrice);
-    }
-    if (feature === "fragile" && weight != 0) {
-      wPrice += 200 * (weight > 1 ? weight : 1);
-    }
-    setPrice(wPrice);
-  }, [weight, feature]);
+  // useEffect(() => {
+  //   async function handleLocation() {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:5050/api/v1/states",
+  //         { headers: { Authorization: `Bearer ${token}` } }
+  //       );
+  //       setLocals(response.data);
+  //     } catch (err) {
+  //       console.error("Failed to fetch states:", err);
+  //     }
+  //   }
+  //   handleLocation();
+  // }, []);
 
   const handleFormOpen = () => {
     setFormOpen(!formOpen);
-    setFeature("");
-    setWeight(0);
-    setPrice(0);
+    // setFeature("");
+    // setWeight(0);
+    // setPrice(0);
     window.scrollTo({ top: 0, behaviour: "smooth" });
   };
-  const handleForm = async (e) => {
-    e.preventDefault();
 
-    try {
-      const response = await axios.post(API_BASE_URL, {
-        weight,
-      });
-      if (response) navigate("/login");
-    } catch (error) {
-      if (error.response) setMessage(error.response.data.message);
-    }
-  };
   return (
     <div className="flex min-h-screen bg-gray-100 animate-fade-in-up duration-300 flex-col">
       <p className="text-3xl text-gray-700 p-3">Welcome, {user.name}</p>
@@ -104,7 +52,7 @@ export default function Delivery() {
           Your delivery starts here — simple, fast, reliable.
         </p>
         {/* Helpful Tips */}
-        {!formOpen && <DeliveryTips tips={tips} />}
+        {!formOpen && <History />}
 
         {/* Action Button */}
         <button
@@ -120,168 +68,7 @@ export default function Delivery() {
         </button>
       </div>
 
-      {formOpen && (
-        <div className="px-6  rounded border-gray-800 text-xl w-150 font-bold animate-fade-in-up duration-100">
-          <h2 className="text-gray-500 py-2">Delivery Details</h2>
-          <form
-            onSubmit={handleForm}
-            className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700"
-          >
-            {/* Product Name */}
-            <div className="flex flex-row pt-3">
-              <label className="w-65">Delivery name: </label>
-              <input
-                type="text"
-                name="description"
-                required
-                placeholder="Name of package"
-                className="col-span-7 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
-              />
-            </div>
-            {/* Features */}
-            <div className="flex flex-row   ">
-              <label className="w-64">Features: </label>
-              <label
-                htmlFor="fragile"
-                className={`block border-1  rounded-md text-sm font-medium px-3 py-1 hover:bg-primary hover:rounded-lg hover:opacity-100 hover:shadow-lg hover:text-gray-100 ml-2 ${
-                  selected === "fragile"
-                    ? "bg-primary text-gray-100 shadow-lg"
-                    : ""
-                }`}
-              >
-                Fragile{" "}
-                <input
-                  type="radio"
-                  className="hidden"
-                  id="fragile"
-                  name="feature"
-                  value="fragile"
-                  onChange={() => {
-                    setSelected("fragile");
-                    setFeature("fragile");
-                  }}
-                />
-              </label>
-
-              <label
-                htmlFor="notfragile"
-                className={`block border-1 rounded-md text-sm font-medium px-3 py-1 hover:bg-primary hover:rounded-lg hover:opacity-100 hover:shadow-lg hover:text-gray-100 ml-2 ${
-                  selected === "notFragile"
-                    ? "bg-primary text-gray-100 shadow-lg"
-                    : ""
-                }`}
-              >
-                Not Fragile{" "}
-                <input
-                  type="radio"
-                  className="hidden"
-                  name="feature"
-                  id="notfragile"
-                  value="notFragile"
-                  onChange={() => {
-                    setSelected("notFragile");
-                    setFeature("notFragile");
-                  }}
-                />
-              </label>
-            </div>
-            {/* Weight */}
-            <div className="flex flex-row ">
-              <label className="w-65">Weight(in kg): </label>
-              <input
-                type="number"
-                min={1}
-                required
-                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none "
-                value={weight}
-                onChange={(e) => setWeight(Number(e.target.value))}
-              />
-            </div>
-            {/* From */}
-            <div className="flex flex-row ">
-              <label htmlFor="from" className="w-65">
-                From:{" "}
-              </label>
-              <select className="col-span-3 rounded-md  text-gray-100 bg-primary px-3 py-2 text-sm focus:border-transparent focus:outline-none shadow-md">
-                <option className="">Samaru Campus</option>
-                <option>Kongo Campus</option>
-              </select>
-            </div>
-            {/* To */}
-            <div className="flex flex-row ">
-              <label htmlFor="from" className="w-65">
-                To:{" "}
-              </label>
-              <select className="col-span-3 rounded-md  text-gray-100 bg-primary px-3 py-2 text-sm focus:border-transparent focus:outline-none shadow-md">
-                <option className="bg-secondary">Samaru Campus</option>
-                <option>Kongo Campus</option>
-              </select>
-            </div>
-            {/* Your Phone Number */}
-            <div className="flex flex-row ">
-              {" "}
-              <label className="text-md w-65 ">Your Phone Number: </label>
-              <input
-                type="tel"
-                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
-                value={user.phone_number}
-              />
-            </div>
-            {/* Recipient's Phone Number */}
-            <div className="flex flex-row ">
-              <label className="text-md w-65 ">
-                Recipient's Phone Number:{" "}
-              </label>
-              <input
-                type="tel"
-                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
-              />
-            </div>
-            {/* Description */}
-            <div className="flex flex-row ">
-              <label className="w-65">Description: </label>
-              <input
-                type="text"
-                name="description"
-                placeholder="Write a short of description of the package"
-                className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 w-60 pb-10 text-sm focus:border-orange-500 focus:outline-none"
-              />
-            </div>
-            {/* Price */}
-            <div className="flex mt-4 justify-end">
-              <div className="inline-block px-6 py-4 rounded-lg bg-primary text-gray-100 shadow-md">
-                <span className="block text-sm uppercase tracking-wide opacity-80">
-                  Total Price
-                </span>
-                <span className="block text-2xl font-bold">
-                  ₦{price.toLocaleString()}
-                </span>
-              </div>
-            </div>
-            {/* CTA */}
-            <div className="flex justify-between">
-              <button
-                type="button"
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                onClick={handleFormOpen}
-              >
-                Cancel
-              </button>
-              {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
-                Proceed
-              </button> */}
-              <PayButton amount={price} />
-              <button
-                ref={lastFieldRef}
-                onClick={() => setConfirm(true)}
-                className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
-              >
-                Confirm Delivery
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
+      {formOpen && <DeliveryForm />}
     </div>
   );
 }

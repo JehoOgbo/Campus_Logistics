@@ -1,6 +1,6 @@
 export default function History() {
   return (
-    <>
+    <div className="mt-3">
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Deliveries Today */}
@@ -12,13 +12,13 @@ export default function History() {
         {/* Pending */}
         <div className="bg-gray-50 rounded-xl shadow-md p-6 text-center border border-gray-100">
           <p className="text-sm font-medium text-gray-500">Pending</p>
-          <p className="mt-2 text-3xl text-yellow-500 font-bold">2</p>
+          <p className="mt-2 text-3xl text-secondary font-bold">2</p>
         </div>
 
         {/* Completed */}
         <div className="bg-gray-50 rounded-xl shadow-md p-6 text-center border border-gray-100">
           <p className="text-sm font-medium text-gray-500">Completed</p>
-          <p className="mt-2 text-3xl text-green-600 font-bold">15</p>
+          <p className="mt-2 text-3xl text-[#2a5298] font-bold">15</p>
         </div>
       </div>
 
@@ -48,6 +48,6 @@ export default function History() {
           </li>
         </ul>
       </div>
-    </>
+    </div>
   );
 }

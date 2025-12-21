@@ -1,6 +1,6 @@
 export default function DeliveryTips({ tips }) {
   return (
-    <div className="max-w-md my-3 p-6 rounded-lg border border-gray-200 shadow-sm">
+    <div className="max-w-md my-3 p-6 rounded-lg border border-gray-200 shadow-sm animate-slide-in">
       <h2 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
         🚚 Delivery Tips
       </h2>
