@@ -50,7 +50,7 @@ def delete_city(city_id):
     Deletes a city based on id provided
     """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user['user_type'] != 'admin':
         return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
 
@@ -96,7 +96,7 @@ def put_city(city_id):
     Updates a City
     """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user['user_type'] != 'admin':
         return jsonify({"message": "Access denied"}), 403
     city = storage.get(City, city_id)
     if not city:
