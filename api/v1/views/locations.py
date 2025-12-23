@@ -11,6 +11,20 @@ from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
+@app_views.route('/locations', methods=['GET'], strict_slashes=False)
+@jwt_required()
+def get_all_locations():
+    """
+    Retrieves a list of all location objects in the database
+    Usage:
+        GET api/v1/locations
+    """
+    all_locations = storage.all(Location).values()
+    list_locations = []
+    for location in all_locations:
+        list_locations.append(location.to_dict())
+    return jsonify(list_locations)
+
 @app_views.route('/cities/<city_id>/locations', methods=['GET'],
                  strict_slashes=False)
 @swag_from('documentation/location/get_locations.yml', methods=['GET'])
