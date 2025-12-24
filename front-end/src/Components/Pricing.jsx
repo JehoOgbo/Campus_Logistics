@@ -25,7 +25,7 @@ export default function Pricing() {
             </h3>{" "}
             {/* Changed text to white */}
             <span className="text-4xl font-bold text-primary mb-4">
-              NGN500
+              NGN200
             </span>{" "}
             {/* Using primary brand color */}
             <ul className="text-gray-300 text-left w-full mb-6">
@@ -68,7 +68,7 @@ export default function Pricing() {
             </h3>{" "}
             {/* Changed text to white */}
             <span className="text-4xl font-bold text-primary mb-4">
-              NGN2,500
+              NGN1,500
             </span>{" "}
             {/* Using primary brand color */}
             <ul className="text-gray-300 text-left w-full mb-6">
@@ -111,7 +111,7 @@ export default function Pricing() {
             </h3>{" "}
             {/* Changed text to white */}
             <span className="text-4xl font-bold text-primary mb-4">
-              NGN700
+              NGN500
             </span>{" "}
             {/* Using primary brand color */}
             <ul className="text-gray-300 text-left w-full mb-6">
