@@ -37,9 +37,9 @@ class Delivery(BaseModel, Base):
         """initializes Delivery"""
         super().__init__(*args, **kwargs)
 
-    def __setattr__(self, name, value):
-        """sets the price based on the weight of the shipment"""
-        if name == "weight":
-            price = int((self.weight / 5) * 1000)
-            super().__setattr__("price", value)
-        super().__setattr__(name, value)
+    # def __setattr__(self, name, value):
+        # """sets the price based on the weight of the shipment"""
+        # if name == "weight":
+            # price = int((self.weight / 5) * 1000)
+            # super().__setattr__("price", price)
+        # super().__setattr__(name, value)

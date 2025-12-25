@@ -17,7 +17,7 @@ def status():
 def number_objects():
     """ Retrieves the number of each objects by type """
     current_user = get_jwt_identity()
-    if current_user['user_type'] != UserType.ADMIN:
+    if current_user['user_type'] != 'admin':
         return jsonify({"message": "Access denied"}), 403
     classes = ["State", "Location", "Delivery", "Review", "City", "Sender"]
     objects = ["states", "locations", "deliveries", "reviews", "cities", "senders"]
