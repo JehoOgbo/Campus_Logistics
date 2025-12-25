@@ -2,17 +2,17 @@ import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 
 import { UserContext } from "../Contexts/UserContext";
+import axios from "axios";
 export default function DashboardSidebar() {
   const side = ["delivery", "history", "payments", "settings"];
   const navigate = useNavigate;
-  const { user, current, setToken } = useContext(UserContext);
+  const { user, current, setToken, token } = useContext(UserContext);
   function handleSignOut() {
     localStorage.removeItem("token");
     setToken(null);
     navigate("/login");
   }
 
-  useEffect(() => {});
   return (
     <>
       <nav className="sticky top-0 flex flex-col w-60 bg-gradient-to-b from-[#1e3c72] to-[#2a5298] text-gray-200   shadow-xl/70 h-screen">
@@ -23,7 +23,7 @@ export default function DashboardSidebar() {
         <div className="flex px-6">
           {" "}
           <div
-            className={`rounded-full  font-semibold  w-15 h-15  ${
+            className={`rounded-full  font-semibold border-2 border-primary w-15 h-15  ${
               !user.image_path && "bg-primary"
             } flex items-center justify-center bg-center bg-cover self-center mt-2 border-r-4 shadow-xl/30`}
             style={
@@ -126,7 +126,7 @@ export default function DashboardSidebar() {
                   {s.charAt(0).toUpperCase() + s.slice(1)}
 
                   <span
-                    className={`absolute bottom-0.5 left-10 h-0.5 bg-gray-100 transition-all duration-1000 ease-in-out ${
+                    className={`absolute  opacity-50 bottom-0.5 left-9 h-0.5 bg-gray-100 transition-all duration-1000 ease-in-out ${
                       current === `/dashboard/${s}` ? " w-35 " : "w-0"
                     }`}
                   ></span>

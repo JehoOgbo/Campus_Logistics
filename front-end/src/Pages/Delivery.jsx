@@ -18,21 +18,6 @@ export default function Delivery() {
 
   const [formOpen, setFormOpen] = useState(false);
 
-  // useEffect(() => {
-  //   async function handleLocation() {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:5050/api/v1/states",
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
-  //       setLocals(response.data);
-  //     } catch (err) {
-  //       console.error("Failed to fetch states:", err);
-  //     }
-  //   }
-  //   handleLocation();
-  // }, []);
-
   const handleFormOpen = () => {
     setFormOpen(!formOpen);
     // setFeature("");

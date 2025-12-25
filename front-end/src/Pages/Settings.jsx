@@ -10,7 +10,7 @@ export default function Settings() {
   const [file, setFile] = useState(null);
   const [userName, setUserName] = useState(user.name);
   const [password, setPassword] = useState();
-  const [newEmail, setNewEmail] = useState(user.email);
+
   const [newPwd, setNewPwd] = useState();
   const [oldPwd, setOldPwd] = useState();
   const [message, setMessage] = useState("");
@@ -190,7 +190,6 @@ export default function Settings() {
               disabled
               placeholder={user.email}
               className="ml-1 px-2   border-0.5 rounded-md bg-gray-300 w-40  text-sm font-medium focus:outline-none"
-              onChange={(e) => setNewEmail(e.target.value)}
             />
             {pwdChanged && (
               <div className="fixed inset-0 bg-transparent backdrop-blur-sm flex items-center justify-center z-50">
