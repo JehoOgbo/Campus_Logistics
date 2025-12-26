@@ -17,7 +17,7 @@ export default function DeliveryForm() {
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
   const [confirm, setConfirm] = useState(false);
-  const [stateob, setStateOb] = useState([]);
+
   const lastFieldRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -314,18 +314,50 @@ export default function DeliveryForm() {
             />
           </div>
           {/* Price */}
-          <div className="flex mt-4 justify-end">
-            <div className="inline-block px-6 py-4 rounded-lg bg-primary text-gray-100 shadow-md">
-              <span className="block text-sm uppercase tracking-wide opacity-80">
-                Total Price
-              </span>
-              <span className="block text-2xl font-bold">
-                ₦{price.toLocaleString()}
-              </span>
-            </div>
-          </div>
-          {/* CTA */}
-          <div className="flex justify-between">
+          {weight > 0 ? (
+            <>
+              <div className="flex mt-4 justify-end">
+                <div className="inline-block px-6 py-4 rounded-lg bg-[#2a5298]  text-gray-100 shadow-md">
+                  <span className="block text-sm uppercase tracking-wide opacity-80">
+                    Total Price
+                  </span>
+                  <span className="block text-2xl font-bold">
+                    ₦{price.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              {/* CTA */}
+              <div className="flex justify-between">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  onClick={handleFormOpen}
+                >
+                  Cancel
+                </button>
+                {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
+                Proceed
+              </button> */}
+                <button
+                  ref={lastFieldRef}
+                  onClick={() => setModalOpen(true)}
+                  className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
+                >
+                  Confirm Delivery
+                </button>
+                <DeliveryDetailsModal
+                  open={modalOpen}
+                  onClose={() => setModalOpen(false)}
+                  details={deliveryDetails}
+                  recName={recName}
+                  recNum={recNum}
+                  weight={weight}
+                  phone={user.phone_number}
+                  price={price}
+                />
+              </div>
+            </>
+          ) : (
             <button
               type="button"
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
@@ -333,38 +365,22 @@ export default function DeliveryForm() {
             >
               Cancel
             </button>
-            {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
-                Proceed
-              </button> */}
-            <button
-              ref={lastFieldRef}
-              onClick={() => setModalOpen(true)}
-              className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
-            >
-              Confirm Delivery
-            </button>
-            <DeliveryDetailsModal
-              open={modalOpen}
-              onClose={() => setModalOpen(false)}
-              details={deliveryDetails}
-              recName={recName}
-              recNum={recNum}
-              weight={weight}
-              phone={user.phone_number}
-              price={price}
-            />
-          </div>
+          )}
         </form>
-        {/* Error Message Box */}
-        <div className="mt-4 rounded-lg bg-gray-700 backdrop-blur-xl p-4 flex items-start gap-3 shadow-md">
-          <div className="flex-shrink-0 text-red-400 text-xl">⚠️</div>
-          <div>
-            <p className="text-sm font-semibold text-gray-100">Error</p>
-            <p className="text-sm text-gray-200">
-              Something went wrong. Please check your input and try again.
-            </p>
-          </div>
-        </div>
+        {message && (
+          <>
+            {/* Error Message Box */}
+            <div className="mt-4 rounded-lg bg-gradient-to-b from-[#1e3c72] to-[#2a5298]  backdrop-blur-xl p-4 flex items-start gap-3 shadow-md">
+              <div className="flex-shrink-0 text-red-400 text-xl">⚠️</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-100">Error</p>
+                <p className="text-sm text-gray-200">
+                  Something went wrong. Please check your input and try again.
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
