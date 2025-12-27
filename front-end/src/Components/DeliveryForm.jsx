@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import DeliveryDetailsModal from "./DeliveryDetailModal";
+import SearchBar from '../Components/SearchBar'
 
 export default function DeliveryForm() {
   const navigate = useNavigate();
@@ -16,26 +17,19 @@ export default function DeliveryForm() {
   const [recNum, setRecNum] = useState("");
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
-  const [confirm, setConfirm] = useState(false);
+  const [local, setLocals] = useState(false);
+  const [yourNum, setYourNum] = useState("");
+  const [fromResults, setFromResults] = useState(""); // Here we'll store the results of the search bar's text input
+  const [toResults, setToResults] = useState(""); // Here we'll store the results of the search bar's text input
 
   const lastFieldRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    async function getLocation() {
-      const res = await axios.get("http://localhost:5050/api/v1/locations", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res) console.log(res.data);
-    }
-    getLocation();
-  }, []);
-
-  useEffect(() => {
-    async function handleStates() {
+    async function handleLocations() {
       try {
         const response = await axios.get(
-          "http://localhost:5050/api/v1/states",
+          "http://localhost:5050/api/v1/locations",
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setLocals(response.data);
@@ -43,7 +37,7 @@ export default function DeliveryForm() {
         console.error("Failed to fetch states:", err);
       }
     }
-    handleStates();
+    handleLocations();
   }, []);
   const deliveryDetails = {
     recipientName: "John Doe",
@@ -87,6 +81,7 @@ export default function DeliveryForm() {
     try {
       const response = await axios.post(API_BASE_URL, {
         weight,
+        sender_id: user.id,
       });
       if (response) navigate("/login");
     } catch (error) {
@@ -104,15 +99,33 @@ export default function DeliveryForm() {
           {/* Recipient Name */}
           <div className="flex flex-row pt-3">
             <label className="w-65">Recipient's name: </label>
-            <input
-              type="text"
-              name="description"
-              required
-              placeholder="Name of recipient"
-              value={recName}
-              onChange={(e) => setRecName(e.target.value)}
-              className="col-span-7 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
-            />
+            <div className="relative">
+              {" "}
+              <input
+                type="text"
+                name="description"
+                required
+                placeholder="Name of recipient"
+                value={recName}
+                onChange={(e) => setRecName(e.target.value)}
+                className="col-span-7 pl-8 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              />
+              <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
+                {" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="size-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           {/* Features */}
           <div className="flex flex-row   ">
@@ -126,7 +139,7 @@ export default function DeliveryForm() {
                   : ""
               }`}
             >
-              Fragile{" "}
+              Fragile
               <input
                 type="radio"
                 className="hidden"
@@ -166,7 +179,6 @@ export default function DeliveryForm() {
           <div className="flex flex-row ">
             <label className="w-65">Weight(in kg): </label>
             <div className="relative">
-              {" "}
               <input
                 type="number"
                 min={1}
@@ -176,7 +188,6 @@ export default function DeliveryForm() {
                 onChange={(e) => setWeight(Number(e.target.value))}
               />
               <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
-                {" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -193,81 +204,37 @@ export default function DeliveryForm() {
             </div>
           </div>
           {/* From */}
-          <div className="flex flex-row ">
-            <label htmlFor="from" className="block w-65">
-              From:
-            </label>
-
-            <div className="relative ">
-              <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="simple-search"
-                className="px-3 py-2.5 bg-gray-300 rounded  rounded-base ps-9 text-heading text-sm focus:ring-brand focus:border-brand block w-auto placeholder:text-body"
-                placeholder="Search Campus name..."
-                required
-              />
-            </div>
-          </div>
+          <SearchBar results={fromResults} setResults={setFromResults}/>
           {/* To */}
-          <div className="flex flex-row ">
-            <label htmlFor="from" className="w-65">
-              To:{" "}
-            </label>
-            <div className="relative ">
-              <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
-                <svg
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                    d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                id="simple-search"
-                className="px-3 py-2.5 bg-gray-300 rounded  rounded-base ps-9 text-heading text-sm focus:ring-brand focus:border-brand block w-auto placeholder:text-body"
-                placeholder="Search Campus name..."
-                required
-              />
-            </div>
-          </div>
+         <SearchBar results={toResults} setResults={setToResults}/>
           {/* Your Phone Number */}
           <div className="flex flex-row ">
             <label className="text-md w-65 ">Your Phone Number: </label>
-
-            <input
-              type="tel"
-              className="col-span-7 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
-              value={user.phone_number}
-            />
+            <div className="relative">
+              <input
+                type="tel"
+                className="col-span-7 pl-8 rounded-md border-2 border-gray-300 bg-gray-300 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+                value={user.phone_number ? user.phone_number : yourNum}
+                onChange={(e) => setYourNum(e.target.value)}
+                placeholder="Your Number"
+              />
+              <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
           {/* Recipient's Phone Number */}
           <div className="flex flex-row relative ">
@@ -360,10 +327,22 @@ export default function DeliveryForm() {
           ) : (
             <button
               type="button"
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              className="p-2 flex  w-30 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
               onClick={handleFormOpen}
             >
-              Cancel
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="size-5 "
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="pl-1"> Cancel</span>
             </button>
           )}
         </form>

@@ -1,3 +1,4 @@
+import SearchBar from '../Components/SearchBar'
 export default function History() {
   return (
     <div className="mt-3">
@@ -48,6 +49,7 @@ export default function History() {
           </li>
         </ul>
       </div>
+     
     </div>
   );
 }
