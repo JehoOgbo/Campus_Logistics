@@ -2,19 +2,17 @@
 import requests
 from flask import Flask, redirect, render_template
 from dotenv import load_dotenv
+from api.v1.views import app_views
 import hmac
 import hashlib
 import json
 import os
 
-app = Flask(__name__)
-
-
 load_dotenv()
 
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
 
-@app.route('/verify/<reference>', strict_slashes=False)
+@app_views.route('/verify/<reference>', strict_slashes=False)
 def verify_payment(reference):
     url = f"https://api.paystack.co/transaction/verify/{reference}"
     headers = {
@@ -31,7 +29,7 @@ def verify_payment(reference):
     else:
         return jsonify({'failure': 'payment not verified'}), 400
 
-@app.route('/paystack-webhook', methods=['POST'], strict_slashes=False)
+@app_views.route('/paystack-webhook', methods=['POST'], strict_slashes=False)
 def handle_webhook():
     paystack_signature = request.headers.get('x-paystack-signature')
     payload = request.data
