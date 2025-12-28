@@ -5,6 +5,10 @@ from dotenv import load_dotenv
 import hmac
 import hashlib
 import json
+import os
+
+app = Flask(__name__)
+
 
 load_dotenv()
 
