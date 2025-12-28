@@ -107,17 +107,17 @@ def post_delivery(location_id):
     if 'sender_id' not in request.get_json():
         abort(400, description="Missing sender_id")
 
-    if 'deliveries_to' not in request.get_json():
+    if 't_location_id' not in request.get_json():
         abort(400, description="Missing destination")
 
     data = request.get_json()
     sender = storage.get(Sender, data['sender_id'])
-    deliveries_to = storage.get(Location, data['f_location_id'])
+    t_location_id = storage.get(Location, data['f_location_id'])
 
     if not sender:
         abort(404)
 
-    if not deliveries_to:
+    if not t_location_id:
         abort(404)
 
     if 'weight' not in request.get_json():

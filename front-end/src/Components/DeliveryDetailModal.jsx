@@ -6,13 +6,40 @@ export default function DeliveryDetailsModal({
   recName,
   recNum,
   weight,
-  from,
-  to,
+  f_location_id,
+  t_location_id,
+  from,to,
   phone,
   price,
   recEmail,
-  customerEmail
+  customerEmail,feature,setMessage
 }) {
+
+  if (open){
+    const API_BASE_URL = `http://localhost:5050/api/v1/locations/${t_location_id}/deliveries`;
+   const handleForm = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(API_BASE_URL, {
+        weight,
+        sender_id: user.id,
+        t_location_id:t_location_id ,
+        f_location_id:f_location_id,
+        receiver_name:recName,
+        receiver_phone:recNum,
+        receiver_email:recEmail,
+        item_type:feature,
+        price:amount
+        
+      });
+      if (response) console.log('success');
+    } catch (error) {
+      if (error.response) setMessage(error.response.data.message);
+    }
+  };
+  handleForm();
+  }
   if (!open) return null;
 
   return (
@@ -41,13 +68,13 @@ export default function DeliveryDetailsModal({
           </p>
           <p>
             <span className="font-semibold">Features:</span>{" "}
-            {details.feature === "fragile" ? "Fragile" : "Not Fragile"}
+            {feature}
           </p>
           <p>
-            <span className="font-semibold">From:</span> {details.from}
+            <span className="font-semibold">From:</span> {from}
           </p>
           <p>
-            <span className="font-semibold">To:</span> {details.to}
+            <span className="font-semibold">To:</span> {to}
           </p>
           <p>
             <span className="font-semibold">Your Phone:</span>
@@ -66,8 +93,8 @@ export default function DeliveryDetailsModal({
           <PayButton amount={price}  recName={recName}
                   recNum={recNum}
                   recEmail={recEmail}
-                  to={toResults}
-                  from={fromResults}
+                  to={to}
+                  from={from}
                   weight={weight}
                   recEmail={recEmail}
                   customerEmail={customerEmail}

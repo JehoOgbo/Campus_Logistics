@@ -2,28 +2,7 @@ import React from "react";
 import PaystackPop from "@paystack/inline-js";
 
 function PayButton({ customerEmail, amount,to, from, weight,recName,recNum,recEmail,feature  }) {
-   const API_BASE_URL = "http://localhost:5050/api/v1/locations";
-   const handleForm = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(API_BASE_URL, {
-        weight,
-        sender_id: user.id,
-        t_location_id:to ,
-        f_location_id:from,
-        receiver_name:recName,
-        receiver_phone:recNum,
-        receiver_email:recEmail,
-        item_type:feature,
-        price:amount
-        
-      });
-      if (response) navigate("/login");
-    } catch (error) {
-      if (error.response) setMessage(error.response.data.message);
-    }
-  };
+   
   const payWithPaystack = () => {
     const paystack = new PaystackPop();
     paystack.newTransaction({

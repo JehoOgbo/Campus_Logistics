@@ -18,7 +18,8 @@ export default function DeliveryForm() {
   const [recEmail, setRecEmail] = useState("");
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
-  const [locationId, setLocationId] = useState('');
+  const [t_location_id, setT_location_id] = useState('');
+  const [f_location_id, setF_location_id] = useState('');
   const [yourNum, setYourNum] = useState("");
   const [fromResults, setFromResults] = useState(""); // Here we'll store the results of the search bar's text input
   const [toResults, setToResults] = useState(""); // Here we'll store the results of the search bar's text input
@@ -211,9 +212,9 @@ export default function DeliveryForm() {
             </div>
           </div>
           {/* From */}
-          <SearchBar results={fromResults} setResults={setFromResults} setLocationId={setLocationId} />
+          <SearchBar results={fromResults} setResults={setFromResults} setLocationId={setF_location_id} />
           {/* To */}
-         <SearchBar results={toResults} setResults={setToResults} />
+         <SearchBar results={toResults} setResults={setToResults} setLocationId={setT_location_id}/>
           {/* Your Phone Number */}
           <div className="flex flex-row ">
             <label className="text-md w-65 ">Your Phone Number: </label>
@@ -332,8 +333,10 @@ export default function DeliveryForm() {
                   phone={user.phone_number}
                   price={price}
                   feature={feature}
-                  locationId={locationId}
+                  t_location_id={t_location_id}
+                  f_location_id={f_location_id}
                   customerEmail={user.email}
+                  setMessage={setMessage}
                 />
               </div>
             </>
