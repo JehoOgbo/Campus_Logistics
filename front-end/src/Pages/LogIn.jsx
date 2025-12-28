@@ -125,9 +125,7 @@ export default function Login() {
               </form>
 
               <div className="mt-5 text-center text-sm/6 text-gray-400">
-                {message && (
-                  <p className="pb-2 text-sm text-red-500">{message}</p>
-                )}
+               
                 Don't have an account?
                 <NavLink
                   to="/register"
@@ -135,6 +133,18 @@ export default function Login() {
                 >
                   Sign Up
                 </NavLink>
+                 {message && (
+                   
+            <div className="mt-4 rounded-lg bg-indigo-400  backdrop-blur-xl p-2 flex items-start gap-3 shadow-md">
+              <div className="flex-shrink-0 text-red-400 text-xl">⚠️</div>
+              <div>
+                <p className="text-sm font-semibold text-gray-100">Error</p>
+                <p className="text-sm text-gray-200">
+                  {message}
+                </p>
+              </div>
+            </div>
+                )}
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../Contexts/UserContext";
 
-export default function SearchBar({results, setResults}) {
+export default function SearchBar({results, setResults,setLocationId}) {
   const [suggestions, setSuggestions] = useState([]); // This is where we'll store the retrieved suggestions
   const [hideSuggestions, setHideSuggestions] = useState(true);
   const [result, setResult] = useState(null);
@@ -82,6 +82,7 @@ export default function SearchBar({results, setResults}) {
           filteredItems.map((item, index) => <li key={index}  className="px-2 flex py-2 hover:bg-gray-200 cursor-pointer"
                   onClick={() => {
                     setResults(item.name);
+                    setLocationId(item.id)
                     findResult(item.title);
                     setHideSuggestions(true);
                   }}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4 ">

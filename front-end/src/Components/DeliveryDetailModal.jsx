@@ -10,6 +10,8 @@ export default function DeliveryDetailsModal({
   to,
   phone,
   price,
+  recEmail,
+  customerEmail
 }) {
   if (!open) return null;
 
@@ -61,7 +63,15 @@ export default function DeliveryDetailsModal({
           >
             Cancel
           </button>
-          <PayButton amount={price} />
+          <PayButton amount={price}  recName={recName}
+                  recNum={recNum}
+                  recEmail={recEmail}
+                  to={toResults}
+                  from={fromResults}
+                  weight={weight}
+                  recEmail={recEmail}
+                  customerEmail={customerEmail}
+                  feature={feature} />
         </div>
       </div>
     </div>

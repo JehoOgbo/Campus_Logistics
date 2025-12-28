@@ -15,9 +15,10 @@ export default function DeliveryForm() {
   const [weight, setWeight] = useState(0);
   const [recName, setRecName] = useState("");
   const [recNum, setRecNum] = useState("");
+  const [recEmail, setRecEmail] = useState("");
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
-  const [local, setLocals] = useState(false);
+  const [locationId, setLocationId] = useState('');
   const [yourNum, setYourNum] = useState("");
   const [fromResults, setFromResults] = useState(""); // Here we'll store the results of the search bar's text input
   const [toResults, setToResults] = useState(""); // Here we'll store the results of the search bar's text input
@@ -25,20 +26,7 @@ export default function DeliveryForm() {
   const lastFieldRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    async function handleLocations() {
-      try {
-        const response = await axios.get(
-          "http://localhost:5050/api/v1/locations",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setLocals(response.data);
-      } catch (err) {
-        console.error("Failed to fetch states:", err);
-      }
-    }
-    handleLocations();
-  }, []);
+ 
   const deliveryDetails = {
     recipientName: "John Doe",
     recipientPhone: "08012345678",
@@ -75,25 +63,13 @@ export default function DeliveryForm() {
     window.scrollTo({ top: 0, behaviour: "smooth" });
   };
 
-  const handleForm = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(API_BASE_URL, {
-        weight,
-        sender_id: user.id,
-      });
-      if (response) navigate("/login");
-    } catch (error) {
-      if (error.response) setMessage(error.response.data.message);
-    }
-  };
+ 
   return (
     <>
       <div className="px-6  rounded border-gray-800 text-xl w-150 font-bold animate-fade-in-up duration-100">
         <h2 className="text-gray-500 py-2">Delivery Details</h2>
         <form
-          onSubmit={handleForm}
+         
           className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700"
         >
           {/* Recipient Name */}
@@ -108,6 +84,37 @@ export default function DeliveryForm() {
                 placeholder="Name of recipient"
                 value={recName}
                 onChange={(e) => setRecName(e.target.value)}
+                className="col-span-7 pl-8 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
+              />
+              <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
+                {" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="size-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          {/* Recipient Email */}
+          <div className="flex flex-row pt-3">
+            <label className="w-65">Recipient's Email: </label>
+            <div className="relative">
+              {" "}
+              <input
+                type="text"
+                name="description"
+                required
+                placeholder="Name of recipient"
+                value={recEmail}
+                onChange={(e) => setRecEmail(e.target.value)}
                 className="col-span-7 pl-8 rounded-md border-2 bg-gray-300 border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none"
               />
               <div className="absolute inset-y-0  flex items-center ps-3 pointer-events-none">
@@ -204,9 +211,9 @@ export default function DeliveryForm() {
             </div>
           </div>
           {/* From */}
-          <SearchBar results={fromResults} setResults={setFromResults}/>
+          <SearchBar results={fromResults} setResults={setFromResults} setLocationId={setLocationId} />
           {/* To */}
-         <SearchBar results={toResults} setResults={setToResults}/>
+         <SearchBar results={toResults} setResults={setToResults} />
           {/* Your Phone Number */}
           <div className="flex flex-row ">
             <label className="text-md w-65 ">Your Phone Number: </label>
@@ -318,9 +325,15 @@ export default function DeliveryForm() {
                   details={deliveryDetails}
                   recName={recName}
                   recNum={recNum}
+                  recEmail={recEmail}
+                  to={toResults}
+                  from={fromResults}
                   weight={weight}
                   phone={user.phone_number}
                   price={price}
+                  feature={feature}
+                  locationId={locationId}
+                  customerEmail={user.email}
                 />
               </div>
             </>
