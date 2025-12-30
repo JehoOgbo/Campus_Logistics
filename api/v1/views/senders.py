@@ -176,6 +176,11 @@ def upload_image(sender_id):
     if file.name == '':
         abort(400, description="No file found")
 
+    if sender.image_path:
+        delete_name = 'front-end/public' + sender.image_path
+        if os.path.exists(delete_name):
+            os.remove(delete_name)
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
 
