@@ -12,6 +12,21 @@ from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
+@app_views.route('/deliveries', methods=['GET'], strict_slashes=False)
+@jwt_required()
+def get_all_deliveries():
+    """
+    Retrieves the list of all delveries in the database
+    """
+    current_user = get_jwt_identity()
+    if current_user['user_type'] != 'admin':
+        return jsonify({"message": "Access denied"}), 403
+    all_deliveries = storage.all(Delivery).values()
+    list_deliveries = []
+    for delivery in all_deliveries:
+        list_deliveries.append(delivery.to_dict())
+    return jsonify(list_deliveries)
+
 @app_views.route('/locations/<location_id>/deliveries/to', methods=['GET'],
                  strict_slashes=False)
 @jwt_required()
