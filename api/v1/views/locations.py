@@ -27,8 +27,8 @@ def get_all_locations():
 
 @app_views.route('/cities/<city_id>/locations', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/location/get_locations.yml', methods=['GET'])
 @jwt_required()
+# @swag_from('documentation/location/get_locations.yml', methods=['GET'])
 def get_locations(city_id):
     """
     Retrieves the list of all Location objects of a City
@@ -44,8 +44,8 @@ def get_locations(city_id):
 
 
 @app_views.route('/locations/<location_id>', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/location/get_location.yml', methods=['GET'])
 @jwt_required()
+# @swag_from('documentation/location/get_location.yml', methods=['GET'])
 def get_location(location_id):
     """
     Retrieves a Location object
@@ -59,8 +59,8 @@ def get_location(location_id):
 
 @app_views.route('/locations/<location_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/location/delete_location.yml', methods=['DELETE'])
 @jwt_required()
+# @swag_from('documentation/location/delete_location.yml', methods=['DELETE'])
 def delete_location(location_id):
     """
     Deletes a Location Object
@@ -82,8 +82,8 @@ def delete_location(location_id):
 
 @app_views.route('/cities/<city_id>/locations', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/location/post_location.yml', methods=['POST'])
 @jwt_required()
+# @swag_from('documentation/location/post_location.yml', methods=['POST'])
 def post_location(city_id):
     """
     Creates a Location
@@ -118,8 +118,8 @@ def post_location(city_id):
 
 
 @app_views.route('/locations/<location_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/location/put_location.yml', methods=['PUT'])
 @jwt_required()
+# @swag_from('documentation/location/put_location.yml', methods=['PUT'])
 def put_location(location_id):
     """
     Updates a Location
@@ -144,4 +144,33 @@ def put_location(location_id):
     storage.save()
     return make_response(jsonify(location.to_dict()), 200)
 
-  
+@app_views.route('/locations/search', methods=['POST'], strict_slashes=False)
+# @jwt_required()
+@swag_from('documentation/location/search_location.yml', methods=['POST'])
+def search_locations():
+    """
+    Search for a location in the database
+    """
+    locations = storage.all(Location).values()
+    cities = storage.all(City).values()
+    search_results = []
+
+    data = request.get_json()
+    if not data:
+        abort(400, description="Not a valid JSON")
+
+    if 'search_key' not in request.get_json():
+        abort(400, description="Not a valid JSON")
+
+    search_key = data.get('search_key', None)
+
+    for location in locations:
+        if search_key.lower() in location.name.lower():
+            search_results.append(location.to_dict())
+
+    for city in cities:
+        if search_key.lower() in city.name.lower():
+            city_locs = get_locations(city.id)
+            search_results.extend(city_locs)
+
+    return make_response(jsonify(search_results), 200)

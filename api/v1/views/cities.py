@@ -12,8 +12,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 @app_views.route('/states/<state_id>/cities', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/city/cities_by_state.yml', methods=['GET'])
 @jwt_required()
+@swag_from('documentation/city/cities_by_state.yml', methods=['GET'])
 def get_cities(state_id):
     """
     Retrieves the list of all cities objects
@@ -30,8 +30,8 @@ def get_cities(state_id):
 
 
 @app_views.route('/cities/<city_id>/', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/city/get_city.yml', methods=['GET'])
 @jwt_required()
+@swag_from('documentation/city/get_city.yml', methods=['GET'])
 def get_city(city_id):
     """
     Retrieves a specific city based on id
@@ -43,8 +43,8 @@ def get_city(city_id):
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
-@swag_from('documentation/city/delete_city.yml', methods=['DELETE'])
 @jwt_required()
+@swag_from('documentation/city/delete_city.yml', methods=['DELETE'])
 def delete_city(city_id):
     """
     Deletes a city based on id provided
@@ -64,8 +64,8 @@ def delete_city(city_id):
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/city/post_city.yml', methods=['POST'])
 @jwt_required()
+@swag_from('documentation/city/post_city.yml', methods=['POST'])
 def post_city(state_id):
     """
     Creates a City
@@ -89,8 +89,8 @@ def post_city(state_id):
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/city/put_city.yml', methods=['PUT'])
 @jwt_required()
+@swag_from('documentation/city/put_city.yml', methods=['PUT'])
 def put_city(city_id):
     """
     Updates a City

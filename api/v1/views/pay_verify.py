@@ -7,12 +7,14 @@ import hmac
 import hashlib
 import json
 import os
+from flask_jwt_extended import jwt_required
 
 load_dotenv()
 
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
 
 @app_views.route('/verify/<reference>', strict_slashes=False)
+@jwt_required()
 def verify_payment(reference):
     url = f"https://api.paystack.co/transaction/verify/{reference}"
     headers = {
@@ -30,6 +32,7 @@ def verify_payment(reference):
         return jsonify({'failure': 'payment not verified'}), 400
 
 @app_views.route('/paystack-webhook', methods=['POST'], strict_slashes=False)
+@jwt_required()
 def handle_webhook():
     paystack_signature = request.headers.get('x-paystack-signature')
     payload = request.data

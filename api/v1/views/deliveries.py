@@ -14,8 +14,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 @app_views.route('/locations/<location_id>/deliveries/to', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/location/get_locations.yml', methods=['GET'])
 @jwt_required()
+# @swag_from('documentation/location/get_locations.yml', methods=['GET'])
 def get_deliveries_to(location_id):
     """
     Retrieves the list of all deliveries to a location
@@ -35,8 +35,8 @@ def get_deliveries_to(location_id):
 
 @app_views.route('/locations/<location_id>/deliveries/from', methods=['GET'],
                  strict_slashes=False)
-@swag_from('documentation/location/get_locations.yml', methods=['GET'])
 @jwt_required()
+# @swag_from('documentation/location/get_locations.yml', methods=['GET'])
 def get_deliveries_from(location_id):
     """
     Retrieves the list of all deliveries to a location
@@ -55,8 +55,8 @@ def get_deliveries_from(location_id):
 
 
 @app_views.route('/deliveries/<delivery_id>', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/delivery/get_delivery.yml', methods=['GET'])
 @jwt_required()
+# @swag_from('documentation/delivery/get_delivery.yml', methods=['GET'])
 def get_delivery(delivery_id):
     """
     Retrieves a Delivery object
@@ -70,8 +70,8 @@ def get_delivery(delivery_id):
 
 @app_views.route('/deliveries/<delivery_id>', methods=['DELETE'],
                  strict_slashes=False)
-@swag_from('documentation/delivery/delete_delivery.yml', methods=['DELETE'])
 @jwt_required()
+# @swag_from('documentation/delivery/delete_delivery.yml', methods=['DELETE'])
 def delete_delivery(delivery_id):
     """
     Deletes a Delivery Object
@@ -90,8 +90,8 @@ def delete_delivery(delivery_id):
 
 @app_views.route('/locations/<location_id>/deliveries', methods=['POST'],
                  strict_slashes=False)
-@swag_from('documentation/delivery/post_location.yml', methods=['POST'])
 @jwt_required()
+# @swag_from('documentation/delivery/post_location.yml', methods=['POST'])
 def post_delivery(location_id):
     """
     Creates a delivery
@@ -134,8 +134,8 @@ def post_delivery(location_id):
 
 
 @app_views.route('/deliveries/<delivery_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/delivery/put_location.yml', methods=['PUT'])
 @jwt_required()
+# @swag_from('documentation/delivery/put_location.yml', methods=['PUT'])
 def put_delivery(delivery_id):
     """
     Updates a Delivery
