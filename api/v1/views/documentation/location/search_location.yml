@@ -2,6 +2,9 @@
     ---
     tags:
       - locations
+    description: Requires a JWT access token
+    security:
+      - Bearer: []
     parameters:
       - name: request
         in: body

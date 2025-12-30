@@ -24,6 +24,7 @@ def senders_search(data=""):
 
 
 @app_views.route('/login', methods=["POST"], strict_slashes=False)
+@swag_from('documentation/signin_and_signup/post_signin.yml', methods=['POST'])
 def login_user():
     """
     Log in an existing user and return a JWT access token.
@@ -46,6 +47,7 @@ def login_user():
     return jsonify(access_token=access_token), 200
 
 @app_views.route('/admin/login', methods=["POST"], strict_slashes=False)
+@swag_from('documentation/signin_and_signup/post_signin_admin.yml', methods=['POST'])
 def login_admin():
     """
     Log in an existing admin and return a JWT access token.

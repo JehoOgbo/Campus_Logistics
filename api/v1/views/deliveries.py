@@ -14,6 +14,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 @app_views.route('/deliveries', methods=['GET'], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/delivery/get_all_deliveries.yml')
 def get_all_deliveries():
     """
     Retrieves the list of all delveries in the database

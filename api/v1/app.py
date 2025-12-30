@@ -57,12 +57,30 @@ def conflict(error):
     """
     return make_response(jsonify({'error': "Duplicate Entry. Name already exists"}), 409)
 
+# Security configuration for Swagger
+template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "My API",
+        "description": "API with JWT Authentication",
+        "version": "1.0.1"
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+        }
+    }
+}
+
 app.config['SWAGGER'] = {
     'title': 'Campus Logistics RESTful API',
     'uiversion': 3
 }
 
-Swagger(app)
+Swagger(app, template=template)
 
 if __name__ == "__main__":
     """ Main Function """

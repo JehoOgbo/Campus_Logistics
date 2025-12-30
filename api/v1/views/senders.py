@@ -64,7 +64,7 @@ def delete_sender(sender_id):
 
 
 @app_views.route('/senders', methods=['POST'], strict_slashes=False)
-# @swag_from('documentation/sender/post_sender.yml', methods=['POST'])
+@swag_from('documentation/senders/post_sender.yml', methods=['POST'])
 def post_sender():
     """
     Creates a sender

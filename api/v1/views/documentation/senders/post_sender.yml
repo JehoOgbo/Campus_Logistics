@@ -1,0 +1,64 @@
+  Sign up a user
+  ---
+  tags:
+    - User
+  parameters:
+    - name: sign up credentials
+      in: body
+      required: true
+      requires:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        user_type:
+          type: enum - regular or admin
+
+  responses:
+    401:
+      description: Invalid email or password
+      schema:
+        properties:
+          message:
+            type: string
+            description: Invalid email or password
+    200:
+      description: Successful login
+      schema:
+        properties:
+          __class__:
+            type: string
+            description: class of object of the instance
+          created_at:
+            type: string
+            description: time of creation of the instance
+          updated_at:
+            type: string
+            description: time of last update of last update of the instance
+          id:
+            type: string
+            description: the uuid of the sender instance
+          name:
+            type: string
+            description: the name of the user
+          email:
+            type: string
+            description: email of the user
+          phone_number:
+            type: string
+            description: phone_number of the user
+          user_type:
+            type: string
+            description: shows whether user is a regular user or an admin
+          image_path:
+            type: string
+            description: path to the user's profile picture
+          saved_filename:
+            type: string
+            description: filename of the image file provided by the user

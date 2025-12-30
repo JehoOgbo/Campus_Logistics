@@ -145,7 +145,7 @@ def put_location(location_id):
     return make_response(jsonify(location.to_dict()), 200)
 
 @app_views.route('/locations/search', methods=['POST'], strict_slashes=False)
-# @jwt_required()
+@jwt_required()
 @swag_from('documentation/location/search_location.yml', methods=['POST'])
 def search_locations():
     """

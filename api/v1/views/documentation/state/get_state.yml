@@ -2,6 +2,9 @@ Gets the list of all states
 ---
 tags:
   - States
+description: Requires a valid JWT access token
+security:
+  - Bearer: []
 responses:
   200:
     description: Successful request
