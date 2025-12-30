@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import DeliveryDetailsModal from "./DeliveryDetailModal";
-import SearchBar from '../Components/SearchBar'
+import SearchBar from "../Components/SearchBar";
 
 export default function DeliveryForm() {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ export default function DeliveryForm() {
   const [recEmail, setRecEmail] = useState("");
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
-  const [t_location_id, setT_location_id] = useState('');
-  const [f_location_id, setF_location_id] = useState('');
+  const [t_location_id, setT_location_id] = useState("");
+  const [f_location_id, setF_location_id] = useState("");
   const [yourNum, setYourNum] = useState("");
   const [fromResults, setFromResults] = useState(""); // Here we'll store the results of the search bar's text input
   const [toResults, setToResults] = useState(""); // Here we'll store the results of the search bar's text input
@@ -27,7 +27,6 @@ export default function DeliveryForm() {
   const lastFieldRef = useRef(null);
   const [modalOpen, setModalOpen] = useState(false);
 
- 
   const deliveryDetails = {
     recipientName: "John Doe",
     recipientPhone: "08012345678",
@@ -64,13 +63,40 @@ export default function DeliveryForm() {
     window.scrollTo({ top: 0, behaviour: "smooth" });
   };
 
- 
+  const handleForm = async (e) => {
+    e.preventDefault();
+    setModalOpen(true);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5050/api/v1/locations/${f_location_id}/deliveries`,
+        {
+          weight,
+          sender_id: user.id,
+          t_location_id: t_location_id,
+          f_location_id: f_location_id,
+          receiver_name: recName,
+          receiver_phone: recNum,
+          receiver_email: recEmail,
+          item_type: feature,
+          price,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response) console.log("success");
+    } catch (error) {
+      if (error.response) setMessage(error.response.data.message);
+    }
+  };
+
   return (
     <>
       <div className="px-6  rounded border-gray-800 text-xl w-150 font-bold animate-fade-in-up duration-100">
         <h2 className="text-gray-500 py-2">Delivery Details</h2>
         <form
-         
+          onSubmit={handleForm}
           className="flex flex-col border-t-1 border-opacity-50 space-y-5  text-gray-700"
         >
           {/* Recipient Name */}
@@ -212,9 +238,17 @@ export default function DeliveryForm() {
             </div>
           </div>
           {/* From */}
-          <SearchBar results={fromResults} setResults={setFromResults} setLocationId={setF_location_id} />
+          <SearchBar
+            results={fromResults}
+            setResults={setFromResults}
+            setLocationId={setF_location_id}
+          />
           {/* To */}
-         <SearchBar results={toResults} setResults={setToResults} setLocationId={setT_location_id}/>
+          <SearchBar
+            results={toResults}
+            setResults={setToResults}
+            setLocationId={setT_location_id}
+          />
           {/* Your Phone Number */}
           <div className="flex flex-row ">
             <label className="text-md w-65 ">Your Phone Number: </label>
@@ -315,7 +349,6 @@ export default function DeliveryForm() {
               </button> */}
                 <button
                   ref={lastFieldRef}
-                  onClick={() => setModalOpen(true)}
                   className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl"
                 >
                   Confirm Delivery

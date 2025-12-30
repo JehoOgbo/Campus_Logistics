@@ -1,45 +1,25 @@
+import { useContext, useEffect } from "react";
 import PayButton from "../Components/PayButton";
+import axios from "axios";
+import { UserContext } from "../Contexts/UserContext";
 export default function DeliveryDetailsModal({
   open,
   onClose,
-  details,
   recName,
   recNum,
   weight,
   f_location_id,
   t_location_id,
-  from,to,
+  from,
+  to,
   phone,
   price,
   recEmail,
-  customerEmail,feature,setMessage
+  customerEmail,
+  feature,
 }) {
+  const { user } = useContext(UserContext);
 
-  if (open){
-    const API_BASE_URL = `http://localhost:5050/api/v1/locations/${t_location_id}/deliveries`;
-   const handleForm = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(API_BASE_URL, {
-        weight,
-        sender_id: user.id,
-        t_location_id:t_location_id ,
-        f_location_id:f_location_id,
-        receiver_name:recName,
-        receiver_phone:recNum,
-        receiver_email:recEmail,
-        item_type:feature,
-        price:amount
-        
-      });
-      if (response) console.log('success');
-    } catch (error) {
-      if (error.response) setMessage(error.response.data.message);
-    }
-  };
-  handleForm();
-  }
   if (!open) return null;
 
   return (
@@ -67,8 +47,7 @@ export default function DeliveryDetailsModal({
             <span className="font-semibold">Weight:</span> {weight} kg
           </p>
           <p>
-            <span className="font-semibold">Features:</span>{" "}
-            {feature}
+            <span className="font-semibold">Features:</span> {feature}
           </p>
           <p>
             <span className="font-semibold">From:</span> {from}
@@ -90,15 +69,18 @@ export default function DeliveryDetailsModal({
           >
             Cancel
           </button>
-          <PayButton amount={price}  recName={recName}
-                  recNum={recNum}
-                  recEmail={recEmail}
-                  to={to}
-                  from={from}
-                  weight={weight}
-                  recEmail={recEmail}
-                  customerEmail={customerEmail}
-                  feature={feature} />
+          <PayButton
+            amount={price}
+            recName={recName}
+            recNum={recNum}
+            recEmail={recEmail}
+            to={to}
+            from={from}
+            weight={weight}
+            recEmail={recEmail}
+            customerEmail={customerEmail}
+            feature={feature}
+          />
         </div>
       </div>
     </div>

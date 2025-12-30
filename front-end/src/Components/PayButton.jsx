@@ -1,8 +1,7 @@
 import React from "react";
 import PaystackPop from "@paystack/inline-js";
 
-function PayButton({ customerEmail, amount,to, from, weight,recName,recNum,recEmail,feature  }) {
-   
+function PayButton({ customerEmail, amount }) {
   const payWithPaystack = () => {
     const paystack = new PaystackPop();
     paystack.newTransaction({
