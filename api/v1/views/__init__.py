@@ -11,3 +11,4 @@ from api.v1.views.signin import *
 from api.v1.views.cities import *
 from api.v1.views.locations import *
 from api.v1.views.pay_verify import *
+from api.v1.views.deliveries import *

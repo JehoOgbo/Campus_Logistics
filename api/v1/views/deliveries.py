@@ -4,20 +4,12 @@ from models.state import State
 from models.city import City
 from models.location import Location
 from models.sender import Sender, UserType
-from models.amenity import Amenity
+from models.delivery import Delivery
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_cors import CORS
-from flask import Flask
-
-app = Flask(__name__)
-
-# Enable CORS globally
-CORS(app)
-
 
 
 @app_views.route('/locations/<location_id>/deliveries/to', methods=['GET'],
@@ -120,7 +112,7 @@ def post_delivery(location_id):
 
     data = request.get_json()
     sender = storage.get(Sender, data['sender_id'])
-    t_location_id = storage.get(Location, data['t_location_id'])
+    t_location_id = storage.get(Location, data['f_location_id'])
 
     if not sender:
         abort(404)
@@ -135,7 +127,7 @@ def post_delivery(location_id):
     elif 'receiver_phone' not in request.get_json():
         abort(400, description="Missing receiver phone")
 
-    data["f_location_id"] = location_id
+    data["t_location_id"] = location_id
     instance = Delivery(**data)
     instance.save()
     return make_response(jsonify(instance.to_dict()), 201)

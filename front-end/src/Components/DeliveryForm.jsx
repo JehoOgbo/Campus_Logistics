@@ -188,26 +188,49 @@ export default function DeliveryForm() {
             </label>
 
             <label
-              htmlFor="notfragile"
+              htmlFor="robust"
               className={`block border-1 rounded-md text-sm font-medium px-3 py-1 hover:bg-primary hover:rounded-lg hover:opacity-100 hover:shadow-lg hover:text-gray-100 ml-2 ${
-                selected === "notFragile"
+                selected === "robust"
                   ? "bg-primary text-gray-100 shadow-lg"
                   : ""
               }`}
             >
-              Not Fragile{" "}
+              Robust{" "}
               <input
                 type="radio"
                 className="hidden"
                 name="feature"
-                id="notfragile"
-                value="notFragile"
+                id="robust"
+                value="robust"
                 onChange={() => {
-                  setSelected("notFragile");
-                  setFeature("notFragile");
+                  setSelected("robust");
+                  setFeature("robust");
                 }}
               />
             </label>
+
+            <label
+              htmlFor="perishable"
+              className={`block border-1  rounded-md text-sm font-medium px-3 py-1 hover:bg-primary hover:rounded-lg hover:opacity-100 hover:shadow-lg hover:text-gray-100 ml-2 ${
+                selected === "perishable"
+                  ? "bg-primary text-gray-100 shadow-lg"
+                  : ""
+              }`}
+            >
+              Perishable{" "}
+              <input
+                type="radio"
+                className="hidden"
+                id="perishable"
+                name="feature"
+                value="perishable"
+                onChange={() => {
+                  setSelected("perishable");
+                  setFeature("perishable");
+                }}
+              />
+            </label>
+
           </div>
           {/* Weight */}
           <div className="flex flex-row ">
