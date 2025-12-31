@@ -14,11 +14,13 @@ from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.exc import IntegrityError
-from os import makedirs
+from os import makedirs, getenv
+from dotenv import load_dotenv
 
 classes = {"State": State, "City": City, "Location": Location,
            "Delivery": Delivery, "Sender": Sender, "Review": Review}
 
+load_dotenv()
 
 class DBStorage:
     """interacts with the MySQL database"""
@@ -26,11 +28,11 @@ class DBStorage:
     __session = None
 
     def __init__(self):
-        HBNB_MYSQL_USER = 'campus_dev' #getenv('HBNB_MYSQL_USER')
-        HBNB_MYSQL_PWD = 'Campus_dev_pwd1*' #getenv('HBNB_MYSQL_PWD')
-        HBNB_MYSQL_HOST = 'localhost' #getenv('HBNB_MYSQL_HOST')
-        HBNB_MYSQL_DB = 'campus_dev_db' #getenv('HBNB_MYSQL_DB')
-        #HBNB_ENV = getenv('HBNB_ENV')
+        HBNB_MYSQL_USER = getenv('HBNB_MYSQL_USER')
+        HBNB_MYSQL_PWD = getenv('HBNB_MYSQL_PWD')
+        HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
+        HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
+        HBNB_ENV = getenv('HBNB_ENV')
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
                                       format(HBNB_MYSQL_USER,
                                              HBNB_MYSQL_PWD,
@@ -38,8 +40,8 @@ class DBStorage:
                                              HBNB_MYSQL_DB))
         UPLOAD_FOLDER = 'uploads/images'
         makedirs(UPLOAD_FOLDER, exist_ok=True)
-        #if HBNB_ENV == 'test':
-            #Base.metadata.drop_all(self.__engine)
+        if HBNB_ENV == 'test':
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """query on the current databse session"""
