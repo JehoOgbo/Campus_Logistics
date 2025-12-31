@@ -6,11 +6,10 @@ import { useContext, useEffect, useRef, useState } from "react";
 import DeliveryDetailsModal from "./DeliveryDetailModal";
 import SearchBar from "../Components/SearchBar";
 
-export default function DeliveryForm() {
+export default function DeliveryForm({ setFormOpen }) {
   const navigate = useNavigate();
   const { token, user } = useContext(UserContext);
   const [selected, setSelected] = useState();
-  const [formOpen, setFormOpen] = useState(false);
   const [feature, setFeature] = useState("");
   const [weight, setWeight] = useState(0);
   const [recName, setRecName] = useState("");
@@ -55,13 +54,6 @@ export default function DeliveryForm() {
     }
     setPrice(wPrice);
   }, [weight, feature]);
-  const handleFormOpen = () => {
-    setFormOpen(!formOpen);
-    setFeature("");
-    setWeight(0);
-    setPrice(0);
-    window.scrollTo({ top: 0, behaviour: "smooth" });
-  };
 
   const handleForm = async (e) => {
     e.preventDefault();
@@ -230,7 +222,6 @@ export default function DeliveryForm() {
                 }}
               />
             </label>
-
           </div>
           {/* Weight */}
           <div className="flex flex-row ">
@@ -265,12 +256,14 @@ export default function DeliveryForm() {
             results={fromResults}
             setResults={setFromResults}
             setLocationId={setF_location_id}
+            title="from"
           />
           {/* To */}
           <SearchBar
             results={toResults}
             setResults={setToResults}
             setLocationId={setT_location_id}
+            title="to"
           />
           {/* Your Phone Number */}
           <div className="flex flex-row ">
@@ -360,13 +353,6 @@ export default function DeliveryForm() {
               </div>
               {/* CTA */}
               <div className="flex justify-between">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                  onClick={handleFormOpen}
-                >
-                  Cancel
-                </button>
                 {/* <button className="px-4 py-2  text-gray-700 rounded-md hover:bg-primary hover:text-gray-100  hover:shadow-xl">
                 Proceed
               </button> */}
@@ -400,7 +386,13 @@ export default function DeliveryForm() {
             <button
               type="button"
               className="p-2 flex  w-30 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
-              onClick={handleFormOpen}
+              onClick={() => {
+                setFormOpen(false);
+                setFeature("");
+                setWeight(0);
+                setPrice(0);
+                window.scrollTo({ top: 0, behaviour: "smooth" });
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

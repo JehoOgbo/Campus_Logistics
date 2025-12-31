@@ -1,12 +1,12 @@
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import { UserContext } from "../Contexts/UserContext";
-import axios from "axios";
+
 export default function DashboardSidebar() {
   const side = ["delivery", "history", "payments", "settings"];
   const navigate = useNavigate;
-  const { user, current, setToken, token } = useContext(UserContext);
+  const { user, current, setToken } = useContext(UserContext);
   function handleSignOut() {
     localStorage.removeItem("token");
     setToken(null);
