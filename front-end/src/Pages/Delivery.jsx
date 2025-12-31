@@ -53,7 +53,7 @@ export default function Delivery() {
         </button>
       </div>
 
-      {formOpen && <DeliveryForm />}
+      {formOpen && <DeliveryForm setFormOpen={setFormOpen} />}
     </div>
   );
 }

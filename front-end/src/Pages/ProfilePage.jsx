@@ -2,9 +2,25 @@ import { Outlet } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import DashboardSidebar from "../Components/DashboardSidebar";
 import Footer from "../Components/Footer";
+import { useState, useEffect } from "react";
+import Header from "../Components/Header";
+import MobileHeader from "../Components/MobileHeader";
+import MobileSideBar from "../Components/MobileDashboardSideBar";
 
 // export const LocationContext = createContext()
 export function UserDashboard() {
+  function useIsMobile() {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
+
+    useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth < 900);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return isMobile;
+  }
+  const isMobile = useIsMobile();
   //     const [user , setUser] = useState(null)
   //     const [isLoading,setIsLoading]=useState(true)
   //       const API_BASE_URL = "http://localhost:5050/api/v1/dashboard";
@@ -35,7 +51,7 @@ export function UserDashboard() {
   return (
     <>
       <div className="flex  min-h-screen text-white">
-        <DashboardSidebar />
+        {isMobile ? <MobileSideBar /> : <DashboardSidebar />}
         <main className="flex-1 p-6 ">
           <Outlet /> {/* This renders nested routes like /dashboard/delivery */}
         </main>
