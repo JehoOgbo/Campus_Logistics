@@ -15,7 +15,7 @@ from uuid import uuid4
 
 @app_views.route('/senders', methods=['GET'], strict_slashes=False)
 @jwt_required()
-# @swag_from('documentation/sender/all_senders.yml')
+@swag_from('documentation/senders/all_senders.yml')
 def get_senders():
     """
     Retrieves the list of all sender objects

@@ -28,6 +28,25 @@ def get_all_deliveries():
         list_deliveries.append(delivery.to_dict())
     return jsonify(list_deliveries)
 
+
+@app_views.route('/senders/<sender_id>/deliveries', methods=['GET'],
+                 strict_slashes=False)
+@jwt_required()
+@swag_from('documentation/delivery/get_deliveries_for_user.yml', methods=['GET'])
+def get_deliveries_for_user(sender_id):
+    """
+    Retrieves the list of all Delivery objects linked to a sender
+    """
+    sender = storage.get(Sender, sender_id)
+
+    if not sender:
+        abort(404)
+
+    deliveries = [delivery.to_dict() for delivery in sender.deliveries]
+
+    return jsonify(deliveries)
+
+
 @app_views.route('/locations/<location_id>/deliveries/to', methods=['GET'],
                  strict_slashes=False)
 @jwt_required()

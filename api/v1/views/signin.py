@@ -69,8 +69,6 @@ def login_admin():
     access_token = create_access_token(identity=iden)
     return jsonify(access_token=access_token), 200
 
-
-
 @app_views.route("/dashboard", methods=["GET"])
 @jwt_required()
 def user_dashboard():

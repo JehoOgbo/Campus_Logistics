@@ -1,36 +1,16 @@
-  Sign up a user
-  ---
-  tags:
-    - User
-  parameters:
-    - name: sign up credentials
-      in: body
-      required: true
-      requires:
-        - email
-        - password
-        - name
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        name:
-          type: string
-        user_type:
-          type: enum - regular or admin
-
-  responses:
-    401:
-      description: Invalid email or password
-      schema:
-        properties:
-          message:
-            type: string
-            description: Invalid email or password
-    200:
-      description: Successful Sign up
-      schema:
+Gets the list of all senders/users
+---
+tags:
+  - User
+description: Requires a valid JWT access token
+security:
+  - Bearer: []
+responses:
+  200:
+    description: Successful request
+    schema:
+      type: array
+      items:
         properties:
           __class__:
             type: string
